@@ -676,13 +676,13 @@ namespace TestvaerkstedetToolkit
                     currentChildXmlColumns = columns;
 
                 // AUTO-POPULER eksisterende pairs
-                var tableEntry = isParent ? currentXmlRepair.ParentTableEntry : currentXmlRepair.ChildTableEntry;
+                var currentTableEntry = isParent ? currentXmlRepair.ParentTableEntry : currentXmlRepair.ChildTableEntry;
                 foreach (var pair in xmlColumnPairs)
                 {
                     if (isParent)
-                        PopulateXmlComboBoxWithColumns(pair.ParentComboBox, columns, tableEntry);
+                        PopulateXmlComboBoxWithColumns(pair.ParentComboBox, columns, currentTableEntry);
                     else
-                        PopulateXmlComboBoxWithColumns(pair.ChildComboBox, columns, tableEntry);
+                        PopulateXmlComboBoxWithColumns(pair.ChildComboBox, columns, currentTableEntry);
                 }
             }
             catch (Exception ex)

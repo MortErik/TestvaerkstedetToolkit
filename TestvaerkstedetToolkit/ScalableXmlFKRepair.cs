@@ -401,7 +401,6 @@ namespace TestvaerkstedetToolkit
             using (var writer = new StreamWriter(outputXmlPath, false, Encoding.UTF8, BUFFER_SIZE))
             {
                 string line;
-                bool foundTableEnd = false;
 
                 // Copy ALLE linjer direkte indtil </table>
                 while ((line = await reader.ReadLineAsync()) != null)
@@ -410,8 +409,6 @@ namespace TestvaerkstedetToolkit
 
                     if (trimmedLine == "</table>" || trimmedLine.Trim() == "</table>")
                     {
-                        foundTableEnd = true;
-
                         // INDSÆT missing rows FØR </table>
                         await AddMissingRowsLineBasedAsync(
                             writer, missingKeys, keyColumns, columnDefaults, progress, cancellationToken);

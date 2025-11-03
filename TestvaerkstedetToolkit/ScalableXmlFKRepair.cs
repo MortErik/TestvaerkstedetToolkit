@@ -13,7 +13,7 @@ using TestvaerkstedetToolkit.Models;
 namespace TestvaerkstedetToolkit
 {
     /// <summary>
-    /// XML FK Repair implementation - REFAKTORERET UDEN XSD
+    /// XML FK Repair implementation
     /// Parsing direkte fra XML + optional tableIndex metadata
     /// </summary>
     public class ScalableXmlFKRepair
@@ -79,7 +79,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Analyze missing FK values - INGEN XSD nødvendig
+        /// Analyze missing FK values
         /// </summary>
         public async Task<List<string>> AnalyzeMissingKeysAsync(
             string parentXmlPath, string childXmlPath,
@@ -106,7 +106,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Load keys from XML - string-based parsing (hurtigste metode)
+        /// Load keys from XML
         /// </summary>
         private void LoadKeysFromXml(
             string xmlPath, FastStringSet keys, List<string> keyColumns,
@@ -237,7 +237,7 @@ namespace TestvaerkstedetToolkit
             }
             else
             {
-                // Strategy 2: Parse fra XML + intelligent gætværk
+                // Strategy 2: Parse fra XML
                 columnDefaults = BuildColumnDefaultsFromXml(sourceXmlPath, integrityDescription);
             }
 
@@ -259,7 +259,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Build column defaults fra TableIndex metadata - BEDSTE STRATEGI
+        /// Build column defaults fra TableIndex metadata
         /// </summary>
         private Dictionary<string, ColumnDefaultInfo> BuildColumnDefaultsFromTableIndex(
             TableIndexEntry tableEntry, string integrityDescription)
@@ -385,7 +385,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Generate XML with missing rows - BEVAR ORIGINAL NAMESPACE OG XSD REFERENCE
+        /// Generate XML with missing rows
         /// </summary>
         private async Task GenerateXmlWithMissingRowsAsync(
             string sourceXmlPath,

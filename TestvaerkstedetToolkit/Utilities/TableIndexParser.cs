@@ -34,7 +34,8 @@ namespace TestvaerkstedetToolkit.Utilities
                         Folder = table.Element(ns + "folder")?.Value ?? "",
                         Description = table.Element(ns + "description")?.Value ?? "",
                         TotalRows = int.TryParse(table.Element(ns + "rows")?.Value, out int rows) ? rows : 0,
-                        // TILFØJET: Initialiser PrimaryKeyColumns liste
+
+                        // Initialiser PrimaryKeyColumns liste
                         PrimaryKeyColumns = new List<string>()
                     };
 
@@ -60,14 +61,14 @@ namespace TestvaerkstedetToolkit.Utilities
                         }
                     }
 
-                    // FIX: Parse ALLE primary key columns
+                    // Parse ALLE primary key columns
                     var primaryKeyElement = table.Element(ns + "primaryKey");
                     if (primaryKeyElement != null)
                     {
                         // Bevar existing property for backward compatibility
                         entry.PrimaryKeyName = primaryKeyElement.Element(ns + "name")?.Value ?? "";
 
-                        // NY: Læs ALLE <column> elementer i primaryKey
+                        // Læs ALLE <column> elementer i primaryKey
                         foreach (var pkColumnElement in primaryKeyElement.Elements(ns + "column"))
                         {
                             string columnName = pkColumnElement.Value?.Trim();
@@ -88,7 +89,7 @@ namespace TestvaerkstedetToolkit.Utilities
                         }
                     }
 
-                    // Parse foreign keys (uændret)
+                    // Parse foreign keys
                     var foreignKeysElement = table.Element(ns + "foreignKeys");
                     if (foreignKeysElement != null)
                     {
@@ -122,7 +123,7 @@ namespace TestvaerkstedetToolkit.Utilities
         }
 
         /// <summary>
-        /// Find tabel entry efter navn (uændret)
+        /// Find tabel entry efter navn
         /// </summary>
         public static TableIndexEntry FindTableByName(List<TableIndexEntry> entries, string tableName)
         {

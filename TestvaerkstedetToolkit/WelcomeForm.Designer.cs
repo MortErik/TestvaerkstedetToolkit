@@ -90,7 +90,7 @@
             this.lblSubtitle.Name = "lblSubtitle";
             this.lblSubtitle.Size = new System.Drawing.Size(451, 21);
             this.lblSubtitle.TabIndex = 1;
-            this.lblSubtitle.Text = "Vælg det værktøj du vil bruge til arkiveringsbehandling";
+            this.lblSubtitle.Text = "Vælg det værktøj du vil bruge til behandle afleveringen";
 
             // 
             // pnlCards

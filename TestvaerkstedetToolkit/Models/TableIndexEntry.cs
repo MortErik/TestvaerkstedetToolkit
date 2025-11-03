@@ -19,10 +19,10 @@ namespace TestvaerkstedetToolkit.Models
         public List<TableIndexColumn> Columns { get; set; } = new List<TableIndexColumn>();
         public List<ForeignKeyInfo> ForeignKeys { get; set; } = new List<ForeignKeyInfo>();
 
-        // EKSISTERENDE: Bevar for backward compatibility
+        // Bevar for backward compatibility
         public string PrimaryKeyName { get; set; }
 
-        // TILFØJET: Support for multiple PK kolonner
+        //Support for multiple PK kolonner
         public List<string> PrimaryKeyColumns { get; set; } = new List<string>();
 
         public int TotalRows { get; set; }
@@ -33,7 +33,7 @@ namespace TestvaerkstedetToolkit.Models
         public string DisplayText => $"{Name} (folder: {Folder}, {Columns.Count} kolonner, {GetPrimaryKeyDisplayText()})";
 
         /// <summary>
-        /// TILFØJET: Få alle PK kolonner som kommasepareret string
+        /// Få alle PK kolonner som kommasepareret string
         /// </summary>
         public string GetPrimaryKeyDisplayText()
         {
@@ -126,7 +126,7 @@ namespace TestvaerkstedetToolkit.Models
         }
 
         /// <summary>
-        /// TILFØJET: Hent alle PK column IDs
+        /// Hent alle PK column IDs
         /// </summary>
         public List<string> GetPrimaryKeyColumnIDs()
         {
@@ -148,7 +148,7 @@ namespace TestvaerkstedetToolkit.Models
         }
 
         /// <summary>
-        /// TILFØJET: Er det en composite primary key?
+        /// Er det en sammensat primary key?
         /// </summary>
         public bool HasCompositePrimaryKey => PrimaryKeyColumns != null && PrimaryKeyColumns.Count > 1;
     }

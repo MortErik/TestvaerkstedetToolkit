@@ -1312,7 +1312,7 @@ namespace TestvaerkstedetToolkit
 
         #endregion
 
-        #region FK Repair - File Selection
+        #region CSV FK Repair - File Selection
 
         /// <summary>
         /// Browse for parent CSV file
@@ -1442,7 +1442,7 @@ namespace TestvaerkstedetToolkit
 
         #endregion
 
-        #region FK Repair - sammensatte PK Support
+        #region CSV FK Repair - sammensatte PK Support
 
         /// <summary>
         /// Initialiser default column pair (den første)
@@ -1565,7 +1565,7 @@ namespace TestvaerkstedetToolkit
 
         #endregion
 
-        #region FK Repair - Analysis
+        #region CSV FK Repair - Analysis
 
         /// <summary>
         /// Hovedmetode til at analysere FK relationships
@@ -1792,7 +1792,7 @@ namespace TestvaerkstedetToolkit
 
         #endregion
 
-        #region FK Repair - Dummy Generation
+        #region CSV FK Repair - Dummy Generation
 
         /// <summary>
         /// Generer dummy records for missing FK values
@@ -1859,7 +1859,7 @@ namespace TestvaerkstedetToolkit
                 string Header = originalHeader + ";row_description";
                 await writer.WriteLineAsync(Header);
 
-                // FIKSET: Kopier eksisterende data UDEN dummy beskrivelse
+                // Kopier eksisterende data UDEN dummy beskrivelse
                 using (var reader = new StreamReader(txtParentCSV.Text, Encoding.UTF8, true))
                 {
                     string line = await reader.ReadLineAsync(); // Skip header - allerede skrevet
@@ -1955,7 +1955,7 @@ namespace TestvaerkstedetToolkit
 
         #endregion
 
-        #region FK Repair - Column Type Detection
+        #region CSV FK Repair - Column Type Detection
 
         /// <summary>
         /// Analyser parent CSV og detekter datatyper for hver kolonne
@@ -2096,24 +2096,9 @@ namespace TestvaerkstedetToolkit
             return false;
         }
 
-        /// <summary>
-        /// Beregner progress percentage baseret på stage og processed count
-        /// </summary>
-        private int CalculateProgress((long processed, string stage) state)
-        {
-            if (state.stage.Contains("Loading parent"))
-                return Math.Min(40, (int)(state.processed / 10000));
-            else if (state.stage.Contains("Analyzing child"))
-                return 40 + Math.Min(50, (int)(state.processed / 10000));
-            else if (state.stage.Contains("Complete"))
-                return 100;
-            else
-                return 0;
-        }
-
         #endregion
 
-        #region FK Repair - Export/Copy Functionality
+        #region CSV FK Repair - Export/Copy Functionality
 
         /// <summary>
         /// Setup context menu til ListBox

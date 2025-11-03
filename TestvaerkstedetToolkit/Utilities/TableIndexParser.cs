@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestvaerkstedetToolkit.Models;
 
-namespace TestvaerkstedetToolkit
+namespace TestvaerkstedetToolkit.Utilities
 {
     /// <summary>
     /// TableIndex parser til læsning af metadata

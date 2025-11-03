@@ -301,7 +301,15 @@ namespace TestvaerkstedetToolkit
             int maxColumnNumber = 0;
 
             // Parse første row for at finde kolonner
-            using (var reader = XmlReader.Create(xmlPath, new XmlReaderSettings { Async = false }))
+            var settings = new XmlReaderSettings
+            {
+                Async = false,
+                IgnoreWhitespace = true,
+                IgnoreComments = true,
+                DtdProcessing = DtdProcessing.Ignore
+            };
+
+            using (var reader = XmlReader.Create(xmlPath, settings))
             {
                 while (reader.Read())
                 {

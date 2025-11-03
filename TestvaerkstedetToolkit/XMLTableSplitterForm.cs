@@ -1479,12 +1479,6 @@ namespace TestvaerkstedetToolkit
             log.AppendLine();
             log.AppendLine($"Output lokation:");
             log.AppendLine($"  {outputDirectory}");
-            log.AppendLine();
-
-            log.AppendLine("Næste skridt:");
-            log.AppendLine($"  1. Test tableIndex_updated.xml i dit arkiveringssystem");
-            log.AppendLine($"  2. Verificer reunion view returnerer korrekte data");
-            log.AppendLine($"  3. Review split_operation_technical log for detaljerede transformations");
 
             log.AppendLine();
             log.AppendLine("═══════════════════════════════════════════════════════════════════════════");
@@ -2001,10 +1995,6 @@ namespace TestvaerkstedetToolkit
                 logger.AppendLine("═══════════════════════════════════════════════════════════");
                 logger.AppendLine($"tableIndex_updated.xml gemt: {outputTableIndexPath}");
                 logger.AppendLine("═══════════════════════════════════════════════════════════");
-
-                // Gem transformation log
-                string logPath = Path.Combine(outputDirectory, "tableIndex_transformation.log");
-                File.WriteAllText(logPath, logger.ToString(), Encoding.UTF8);
 
                 System.Diagnostics.Debug.WriteLine($"TableIndex transformation fuldført: {splitTables.Count} splits");
                 return logger.ToString();

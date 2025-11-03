@@ -211,6 +211,8 @@ namespace TestvaerkstedetToolkit
         // XML FK repair sammensatte PK tracking
         private List<ColumnPair> xmlColumnPairs = new List<ColumnPair>();
         private int nextXmlPairNumber = 2;
+        private List<XmlColumnInfo> currentParentXmlColumns = null;
+        private List<XmlColumnInfo> currentChildXmlColumns = null;
 
         #endregion
 
@@ -305,6 +307,12 @@ namespace TestvaerkstedetToolkit
 
                 if (btnGenerateFixedXml != null)
                     btnGenerateFixedXml.Click += BtnGenerateFixedXml_Click;
+
+                if (btnAddXmlPrimaryKey != null)
+                    btnAddXmlPrimaryKey.Click += BtnAddXmlPrimaryKey_Click;
+
+                if (btnRemoveXmlPrimaryKey != null)
+                    btnRemoveXmlPrimaryKey.Click += BtnRemoveXmlPrimaryKey_Click;
 
                 // Setup initial beskrivelse text
                 if (txtIntegrityDesc != null && string.IsNullOrEmpty(txtIntegrityDesc.Text))
@@ -660,6 +668,22 @@ namespace TestvaerkstedetToolkit
 
                 if (comboBox.Items.Count > 0)
                     comboBox.SelectedIndex = 0;
+
+                // GEM kolonner til auto-population
+                if (isParent)
+                    currentParentXmlColumns = columns;
+                else
+                    currentChildXmlColumns = columns;
+
+                // AUTO-POPULER eksisterende pairs
+                var tableEntry = isParent ? currentXmlRepair.ParentTableEntry : currentXmlRepair.ChildTableEntry;
+                foreach (var pair in xmlColumnPairs)
+                {
+                    if (isParent)
+                        PopulateXmlComboBoxWithColumns(pair.ParentComboBox, columns, tableEntry);
+                    else
+                        PopulateXmlComboBoxWithColumns(pair.ChildComboBox, columns, tableEntry);
+                }
             }
             catch (Exception ex)
             {
@@ -780,6 +804,16 @@ namespace TestvaerkstedetToolkit
             {
                 MessageBox.Show("Vælg både Parent og Child XML filer først");
                 return;
+            }
+
+            // Tjek at alle ekstra kolonner er valgt
+            foreach (var pair in xmlColumnPairs)
+            {
+                if (pair.ParentComboBox.SelectedItem == null || pair.ChildComboBox.SelectedItem == null)
+                {
+                    MessageBox.Show($"Vælg kolonner for primærnøgle {pair.PairNumber}");
+                    return;
+                }
             }
 
             // saml alle primærnøgle kolonner (base + sammensatte)
@@ -946,6 +980,153 @@ namespace TestvaerkstedetToolkit
 
             // Fallback: split på kolon eller mellemrum
             return comboBoxText.Split(new[] { ':', ' ', '(' }, StringSplitOptions.RemoveEmptyEntries)[0].Trim();
+        }
+
+        #endregion
+
+        #region XML FK Repair - Composite PK Support
+
+        /// <summary>
+        /// Populate en ComboBox med XML kolonner
+        /// </summary>
+        private void PopulateXmlComboBoxWithColumns(ComboBox comboBox, List<XmlColumnInfo> columns, TableIndexEntry tableEntry)
+        {
+            if (comboBox == null || columns == null) return;
+
+            try
+            {
+                comboBox.Items.Clear();
+
+                foreach (var column in columns.OrderBy(c => c.Position))
+                {
+                    string displayText = column.Name;
+                    if (!string.IsNullOrEmpty(column.DisplayName))
+                        displayText = $"{column.Name}: {column.DisplayName}";
+                    if (!string.IsNullOrEmpty(column.DataType))
+                        displayText += $" ({column.DataType})";
+                    if (!string.IsNullOrEmpty(column.Description))
+                        displayText += $" - {column.Description}";
+
+                    comboBox.Items.Add(displayText);
+                }
+
+                if (comboBox.Items.Count > 0)
+                    comboBox.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"PopulateXmlComboBoxWithColumns error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Add button click handler
+        /// </summary>
+        private void BtnAddXmlPrimaryKey_Click(object sender, EventArgs e)
+        {
+            AddNewXmlColumnPair();
+        }
+
+        /// <summary>
+        /// Remove button click handler
+        /// </summary>
+        private void BtnRemoveXmlPrimaryKey_Click(object sender, EventArgs e)
+        {
+            RemoveLastXmlColumnPair();
+        }
+
+        /// <summary>
+        /// Tilføj nyt XML column pair til sammensatte PK
+        /// </summary>
+        private void AddNewXmlColumnPair()
+        {
+            var pair = new ColumnPair { PairNumber = nextXmlPairNumber };
+
+            // Skab labels
+            pair.ParentLabel = new Label
+            {
+                Text = $"Parent {nextXmlPairNumber}:",
+                Location = new Point(20, 15 + (nextXmlPairNumber - 2) * 30),
+                Size = new Size(70, 13),
+                AutoSize = true
+            };
+
+            pair.ChildLabel = new Label
+            {
+                Text = $"Child {nextXmlPairNumber}:",
+                Location = new Point(380, 15 + (nextXmlPairNumber - 2) * 30),
+                Size = new Size(60, 13),
+                AutoSize = true
+            };
+
+            // Skab ComboBoxes
+            pair.ParentComboBox = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Location = new Point(105, 12 + (nextXmlPairNumber - 2) * 30),
+                Size = new Size(250, 21),
+                Name = $"cmbXmlParent{nextXmlPairNumber}"
+            };
+
+            pair.ChildComboBox = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Location = new Point(460, 12 + (nextXmlPairNumber - 2) * 30),
+                Size = new Size(250, 21),
+                Name = $"cmbXmlChild{nextXmlPairNumber}"
+            };
+
+            // Tilføj til panel
+            pnlXmlDynamicColumns.Controls.Add(pair.ParentLabel);
+            pnlXmlDynamicColumns.Controls.Add(pair.ChildLabel);
+            pnlXmlDynamicColumns.Controls.Add(pair.ParentComboBox);
+            pnlXmlDynamicColumns.Controls.Add(pair.ChildComboBox);
+
+            // Auto-populer hvis kolonner allerede er indlæst
+            if (currentParentXmlColumns != null)
+                PopulateXmlComboBoxWithColumns(pair.ParentComboBox, currentParentXmlColumns, currentXmlRepair.ParentTableEntry);
+            if (currentChildXmlColumns != null)
+                PopulateXmlComboBoxWithColumns(pair.ChildComboBox, currentChildXmlColumns, currentXmlRepair.ChildTableEntry);
+
+            xmlColumnPairs.Add(pair);
+            nextXmlPairNumber++;
+
+            // Udvid panel højde hvis nødvendigt
+            pnlXmlDynamicColumns.Height = Math.Max(35, (nextXmlPairNumber - 1) * 30);
+
+            UpdateXmlRemoveButtonState();
+        }
+
+        /// <summary>
+        /// Fjern sidste XML column pair
+        /// </summary>
+        private void RemoveLastXmlColumnPair()
+        {
+            if (xmlColumnPairs.Count == 0) return;
+
+            var lastPair = xmlColumnPairs.Last();
+
+            // Fjern controls fra panel
+            pnlXmlDynamicColumns.Controls.Remove(lastPair.ParentLabel);
+            pnlXmlDynamicColumns.Controls.Remove(lastPair.ChildLabel);
+            pnlXmlDynamicColumns.Controls.Remove(lastPair.ParentComboBox);
+            pnlXmlDynamicColumns.Controls.Remove(lastPair.ChildComboBox);
+
+            xmlColumnPairs.Remove(lastPair);
+            nextXmlPairNumber--;
+
+            // Juster panel højde
+            pnlXmlDynamicColumns.Height = Math.Max(35, (nextXmlPairNumber - 1) * 30);
+
+            UpdateXmlRemoveButtonState();
+        }
+
+        /// <summary>
+        /// Opdater remove button enabled state
+        /// </summary>
+        private void UpdateXmlRemoveButtonState()
+        {
+            btnRemoveXmlPrimaryKey.Enabled = xmlColumnPairs.Count > 0;
         }
 
         #endregion

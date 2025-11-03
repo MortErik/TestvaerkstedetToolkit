@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestvaerkstedetToolkit.Models;
 
-namespace TestvaerkstedetToolkit
+namespace TestvaerkstedetToolkit.Models
 {
     /// <summary>
     /// TableIndex entry med komplet metadata

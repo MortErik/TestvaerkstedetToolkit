@@ -14,6 +14,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using TestvaerkstedetToolkit.Utilities;
+using TestvaerkstedetToolkit.Models;
 
 namespace TestvaerkstedetToolkit
 {
@@ -673,7 +674,14 @@ namespace TestvaerkstedetToolkit
         {
             var columns = new List<XmlColumnInfo>();
 
-            using (var reader = XmlReader.Create(xmlPath))
+            var settings = new XmlReaderSettings
+            {
+                IgnoreWhitespace = true,
+                IgnoreComments = true,
+                DtdProcessing = DtdProcessing.Ignore
+            };
+
+            using (var reader = XmlReader.Create(xmlPath, settings))
             {
                 while (reader.Read())
                 {

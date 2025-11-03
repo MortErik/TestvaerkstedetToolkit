@@ -223,7 +223,7 @@ namespace TestvaerkstedetToolkit
             InitializeComponent();
             SetupXmlFKRepairEventHandlers();
             SetupListBoxContextMenu();
-            //SetupXmlListBoxContextMenu();
+            SetupXmlListBoxContextMenu();
             InitializeDefaultColumnPair();
             SetWorkMode();
 
@@ -313,6 +313,16 @@ namespace TestvaerkstedetToolkit
 
                 if (btnRemoveXmlPrimaryKey != null)
                     btnRemoveXmlPrimaryKey.Click += BtnRemoveXmlPrimaryKey_Click;
+
+                // Export/Copy funktionalitet
+                if (btnCopyXmlSelected != null)
+                    btnCopyXmlSelected.Click += BtnCopyXmlSelected_Click;
+
+                if (btnExportXmlMissing != null)
+                    btnExportXmlMissing.Click += BtnExportXmlMissing_Click;
+
+                if (lstXmlMissingValues != null)
+                    lstXmlMissingValues.KeyDown += LstXmlMissingValues_KeyDown;
 
                 // Setup initial beskrivelse text
                 if (txtIntegrityDesc != null && string.IsNullOrEmpty(txtIntegrityDesc.Text))
@@ -947,8 +957,7 @@ namespace TestvaerkstedetToolkit
                         lblXmlFKStats.Text = $"Genereret {missingKeys.Count:N0} nye rækker";
 
                         MessageBox.Show($"Genereret repareret XML med {missingKeys.Count:N0} nye rækker\n\n" +
-                                      $"Output: {outputXmlPath}\n\n" +
-                                      $"BEMÆRK: XSD fil er automatisk navngivet samme som XML filen.",
+                                      $"Output: {outputXmlPath}\n\n",
                                       "Succes", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
@@ -1127,6 +1136,178 @@ namespace TestvaerkstedetToolkit
         private void UpdateXmlRemoveButtonState()
         {
             btnRemoveXmlPrimaryKey.Enabled = xmlColumnPairs.Count > 0;
+        }
+
+        #endregion
+
+        #region XML FK Repair - Export/Copy Functionality
+
+        /// <summary>
+        /// Setup context menu til XML ListBox
+        /// </summary>
+        private void SetupXmlListBoxContextMenu()
+        {
+            var contextMenu = new ContextMenuStrip();
+
+            var copyItem = new ToolStripMenuItem("Kopiér markerede");
+            copyItem.Click += (s, e) => BtnCopyXmlSelected_Click(s, new EventArgs());
+            contextMenu.Items.Add(copyItem);
+
+            var selectAllItem = new ToolStripMenuItem("Markér alle");
+            selectAllItem.Click += (s, e) => {
+                for (int i = 0; i < lstXmlMissingValues.Items.Count; i++)
+                    lstXmlMissingValues.SetSelected(i, true);
+            };
+            contextMenu.Items.Add(selectAllItem);
+
+            contextMenu.Items.Add(new ToolStripSeparator());
+
+            var exportItem = new ToolStripMenuItem("Eksportér alle til fil");
+            exportItem.Click += (s, e) => BtnExportXmlMissing_Click(s, new EventArgs());
+            contextMenu.Items.Add(exportItem);
+
+            lstXmlMissingValues.ContextMenuStrip = contextMenu;
+        }
+
+        /// <summary>
+        /// Kopiér markerede items til clipboard
+        /// </summary>
+        private void BtnCopyXmlSelected_Click(object sender, EventArgs e)
+        {
+            if (lstXmlMissingValues.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Vælg items at kopiere");
+                return;
+            }
+
+            var selectedText = string.Join("\r\n", lstXmlMissingValues.SelectedItems.Cast<string>());
+            Clipboard.SetText(selectedText);
+
+            MessageBox.Show($"Kopieret {lstXmlMissingValues.SelectedItems.Count} items til clipboard");
+        }
+
+        /// <summary>
+        /// Eksporter alle missing values til tekstfil
+        /// </summary>
+        private void BtnExportXmlMissing_Click(object sender, EventArgs e)
+        {
+            if (lstXmlMissingValues.Items.Count == 0)
+            {
+                MessageBox.Show("Ingen data at eksportere");
+                return;
+            }
+
+            saveFileDialog1.Filter = "Tekstfiler|*.txt|Alle filer|*.*";
+            saveFileDialog1.FileName = $"missing_xml_fk_values_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    var sb = new StringBuilder();
+
+                    // Header information
+                    sb.AppendLine("Missing XML Foreign Key Values Report");
+                    sb.AppendLine("======================================");
+                    sb.AppendLine($"Generated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+                    sb.AppendLine();
+
+                    // TABELNAVNE
+                    sb.AppendLine("Tables:");
+                    string parentTableName = currentXmlRepair.ParentTableEntry?.Name ?? Path.GetFileNameWithoutExtension(currentXmlRepair.ParentXmlPath);
+                    string childTableName = currentXmlRepair.ChildTableEntry?.Name ?? Path.GetFileNameWithoutExtension(currentXmlRepair.ChildXmlPath);
+                    sb.AppendLine($"  Parent Table: {parentTableName}");
+                    sb.AppendLine($"  Child Table: {childTableName}");
+                    sb.AppendLine();
+
+                    // FILE PATHS
+                    sb.AppendLine("File Paths:");
+                    sb.AppendLine($"  Parent XML: {currentXmlRepair.ParentXmlPath}");
+                    sb.AppendLine($"  Child XML: {currentXmlRepair.ChildXmlPath}");
+                    sb.AppendLine();
+
+                    // KOLONNENAVNE MED DETALJER
+                    sb.AppendLine("Foreign Key Columns:");
+                    sb.AppendLine("  Parent Columns:");
+                    for (int i = 0; i < currentXmlRepair.ParentKeyColumns.Count; i++)
+                    {
+                        string columnID = currentXmlRepair.ParentKeyColumns[i];
+                        string columnName = GetColumnDisplayName(columnID, currentXmlRepair.ParentTableEntry);
+                        sb.AppendLine($"    {i + 1}. {columnID} - {columnName}");
+                    }
+                    sb.AppendLine();
+                    sb.AppendLine("  Child Columns:");
+                    for (int i = 0; i < currentXmlRepair.ChildKeyColumns.Count; i++)
+                    {
+                        string columnID = currentXmlRepair.ChildKeyColumns[i];
+                        string columnName = GetColumnDisplayName(columnID, currentXmlRepair.ChildTableEntry);
+                        sb.AppendLine($"    {i + 1}. {columnID} - {columnName}");
+                    }
+                    sb.AppendLine();
+
+                    // Key type
+                    string keyType = currentXmlRepair.ParentKeyColumns.Count > 1 ? "Composite Primary Key" : "Single Primary Key";
+                    sb.AppendLine($"Key Type: {keyType}");
+
+                    if (currentXmlRepair.ParentKeyColumns.Count > 1)
+                    {
+                        sb.AppendLine($"Key Format: {string.Join(" | ", currentXmlRepair.ParentKeyColumns)}");
+                    }
+
+                    sb.AppendLine($"Total Missing Values: {lstXmlMissingValues.Items.Count}");
+                    sb.AppendLine();
+                    sb.AppendLine("Missing Values:");
+                    sb.AppendLine("---------------");
+
+                    foreach (var item in lstXmlMissingValues.Items)
+                    {
+                        sb.AppendLine(item.ToString());
+                    }
+
+                    File.WriteAllText(saveFileDialog1.FileName, sb.ToString(), Encoding.UTF8);
+
+                    MessageBox.Show($"Eksporteret {lstXmlMissingValues.Items.Count} værdier til {saveFileDialog1.FileName}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Fejl ved eksport: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Hjælpemetode til at få kolonnenavn med metadata
+        /// </summary>
+        private string GetColumnDisplayName(string columnID, TableIndexEntry tableEntry)
+        {
+            if (tableEntry != null && tableEntry.Columns != null)
+            {
+                var column = tableEntry.Columns.FirstOrDefault(c => c.ColumnID == columnID);
+                if (column != null)
+                {
+                    return $"{column.Name} ({column.DataType})";
+                }
+            }
+
+            return "(metadata ikke tilgængelig)";
+        }
+
+        /// <summary>
+        /// Keyboard shortcuts til XML ListBox
+        /// </summary>
+        private void LstXmlMissingValues_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                BtnCopyXmlSelected_Click(sender, new EventArgs());
+                e.Handled = true;
+            }
+            else if (e.Control && e.KeyCode == Keys.A)
+            {
+                for (int i = 0; i < lstXmlMissingValues.Items.Count; i++)
+                    lstXmlMissingValues.SetSelected(i, true);
+                e.Handled = true;
+            }
         }
 
         #endregion

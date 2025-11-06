@@ -895,7 +895,7 @@ namespace TestvaerkstedetToolkit
             this.label2.TabIndex = 0;
             this.label2.Text = "Vælg tabelkolonne";
 
-            // flowLayoutPanel1 - KRITISK KOMPONENT
+            // flowLayoutPanel1
             this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(123, 132);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -934,7 +934,7 @@ namespace TestvaerkstedetToolkit
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxXML.Location = new System.Drawing.Point(384, 216);
             this.richTextBoxXML.Name = "richTextBoxXML";
-            this.richTextBoxXML.Size = new System.Drawing.Size(796, 304);
+            this.richTextBoxXML.Size = new System.Drawing.Size(766, 304);
             this.richTextBoxXML.TabIndex = 8;
             this.richTextBoxXML.Text = "";
             this.richTextBoxXML.WordWrap = false;
@@ -954,7 +954,7 @@ namespace TestvaerkstedetToolkit
             this.buttonTilføjRækker.Enabled = false;
             this.buttonTilføjRækker.Location = new System.Drawing.Point(1050, 189);
             this.buttonTilføjRækker.Name = "buttonTilføjRækker";
-            this.buttonTilføjRækker.Size = new System.Drawing.Size(120, 23);
+            this.buttonTilføjRækker.Size = new System.Drawing.Size(100, 23);
             this.buttonTilføjRækker.TabIndex = 10;
             this.buttonTilføjRækker.Text = "Tilføj nye rækker";
             this.buttonTilføjRækker.UseVisualStyleBackColor = true;

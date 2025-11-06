@@ -387,38 +387,54 @@ namespace TestvaerkstedetToolkit
         /// <summary>
         /// Generate XML with missing rows
         /// </summary>
-        private async Task GenerateXmlWithMissingRowsAsync(
-            string sourceXmlPath,
-            string outputXmlPath,
-            List<string> missingKeys,     // ["123|ABC|999", "456|DEF|888"]
-            List<string> keyColumns,      // ["c1", "c2", "c3"]
-            string integrityDescription,
-            Dictionary<string, ColumnDefaultInfo> columnDefaults,
-            IProgress<(long processed, string stage)> progress,
-            CancellationToken cancellationToken)
+        private async Task GenerateXmlWithMissingRowsAsync(string sourceXmlPath, string outputXmlPath, List<string> missingKeys, List<string> keyColumns, string integrityDescription, 
+            Dictionary<string, ColumnDefaultInfo> columnDefaults, IProgress<(long processed, string stage)> progress, CancellationToken cancellationToken)
         {
+            // Find den nye kolonne (c10, c11, etc.)
+            var newColumnName = columnDefaults.Keys.OrderByDescending(k => ExtractColumnNumber(k)).First();
+
             using (var reader = new StreamReader(sourceXmlPath, Encoding.UTF8, true, BUFFER_SIZE))
             using (var writer = new StreamWriter(outputXmlPath, false, Encoding.UTF8, BUFFER_SIZE))
             {
                 string line;
+                bool inRow = false;
 
-                // Copy ALLE linjer direkte indtil </table>
                 while ((line = await reader.ReadLineAsync()) != null)
                 {
                     string trimmedLine = line.TrimEnd();
 
+                    // Detect start af row
+                    if (trimmedLine.Trim() == "<row>")
+                    {
+                        inRow = true;
+                        await writer.WriteLineAsync(line);
+                        continue;
+                    }
+
+                    // Detect end af row - INDSÆT ny kolonne FØR </row>
+                    if (inRow && (trimmedLine.Trim() == "</row>"))
+                    {
+                        // Tilføj den nye kolonne til eksisterende række - TOM (ikke nil)
+                        string indentation = "    "; // Match eksisterende indentation
+                        await writer.WriteLineAsync($"{indentation}<{newColumnName}></{newColumnName}>");
+                
+                        // Skriv </row>
+                        await writer.WriteLineAsync(line);
+                        inRow = false;
+                        continue;
+                    }
+
+                    // Detect </table> - INDSÆT missing rows FØR </table>
                     if (trimmedLine == "</table>" || trimmedLine.Trim() == "</table>")
                     {
-                        // INDSÆT missing rows FØR </table>
                         await AddMissingRowsLineBasedAsync(
                             writer, missingKeys, keyColumns, columnDefaults, progress, cancellationToken);
 
-                        // Skriv </table> tag
                         await writer.WriteLineAsync(line);
                         break;
                     }
 
-                    // Kopier linje direkte - 100% preservation
+                    // Kopier alle andre linjer direkte
                     await writer.WriteLineAsync(line);
                 }
 
@@ -451,7 +467,7 @@ namespace TestvaerkstedetToolkit
                     throw new InvalidOperationException($"Key mismatch");
 
                 // Start row
-                await writer.WriteLineAsync("\t<row>");
+                await writer.WriteLineAsync("  <row>");
 
                 // Write ALL columns in order
                 foreach (var kvp in columnDefaults.OrderBy(x => ExtractColumnNumber(x.Key)))
@@ -467,22 +483,22 @@ namespace TestvaerkstedetToolkit
                         // KEY COLUMN
                         string keyValue = keyParts[keyIndex];
                         string escaped = SecurityElement.Escape(keyValue);
-                        await writer.WriteLineAsync($"\t\t<{columnName}>{escaped}</{columnName}>");
+                        await writer.WriteLineAsync($"    <{columnName}>{escaped}</{columnName}>");
                     }
                     else if (info.IsNillable && info.DefaultValue == null)
                     {
                         // NULLABLE
-                        await writer.WriteLineAsync($"\t\t<{columnName} xsi:nil=\"true\"/>");
+                        await writer.WriteLineAsync($"    <{columnName} xsi:nil=\"true\"/>");
                     }
                     else
                     {
                         // DEFAULT
                         string escaped = SecurityElement.Escape(info.DefaultValue ?? "");
-                        await writer.WriteLineAsync($"\t\t<{columnName}>{escaped}</{columnName}>");
+                        await writer.WriteLineAsync($"    <{columnName}>{escaped}</{columnName}>");
                     }
                 }
 
-                await writer.WriteLineAsync("\t</row>");
+                await writer.WriteLineAsync("  </row>");
             }
         }
     }

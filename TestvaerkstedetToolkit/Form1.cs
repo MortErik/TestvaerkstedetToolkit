@@ -221,7 +221,9 @@ namespace TestvaerkstedetToolkit
         public Form1()
         {
             InitializeComponent();
+            SetupCsvFKRepairEventHandlers();
             SetupXmlFKRepairEventHandlers();
+            SetupXmlConversionEventHandlers();
             SetupListBoxContextMenu();
             SetupXmlListBoxContextMenu();
             InitializeDefaultColumnPair();
@@ -333,6 +335,85 @@ namespace TestvaerkstedetToolkit
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"SetupXmlFKRepairEventHandlers error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Setup event handlers for CSV FK Repair controls
+        /// </summary>
+        private void SetupCsvFKRepairEventHandlers()
+        {
+            try
+            {
+                // Browse buttons
+                if (btnBrowseParent != null)
+                    btnBrowseParent.Click += btnBrowseParent_Click;
+
+                if (btnBrowseChild != null)
+                    btnBrowseChild.Click += btnBrowseChild_Click;
+
+                // sammensatte PK buttons
+                if (btnAddPrimaryKey != null)
+                    btnAddPrimaryKey.Click += btnAddPrimaryKey_Click;
+
+                if (btnRemovePrimaryKey != null)
+                    btnRemovePrimaryKey.Click += btnRemovePrimaryKey_Click;
+
+                // Analysis button
+                if (btnAnalyzeFK != null)
+                    btnAnalyzeFK.Click += btnAnalyzeFK_Click;
+
+                // Generate/Export buttons
+                if (btnGenerateDummies != null)
+                    btnGenerateDummies.Click += btnGenerateDummies_Click;
+
+                if (btnCopySelected != null)
+                    btnCopySelected.Click += btnCopySelected_Click;
+
+                if (btnExportMissing != null)
+                    btnExportMissing.Click += btnExportMissing_Click;
+
+                // Keyboard shortcut for listbox
+                if (lstMissingValues != null)
+                    lstMissingValues.KeyDown += (s, e) =>
+                    {
+                        if (e.Control && e.KeyCode == Keys.C)
+                        {
+                            btnCopySelected_Click(s, new EventArgs());
+                            e.Handled = true;
+                        }
+                    };
+
+                System.Diagnostics.Debug.WriteLine("[Setup] CSV FK Repair event handlers wired");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"SetupCsvFKRepairEventHandlers error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Setup event handlers for XML Conversion controls
+        /// </summary>
+        private void SetupXmlConversionEventHandlers()
+        {
+            try
+            {
+                // Map button handlers
+                if (buttonLæsCSV != null)
+                    buttonLæsCSV.Click += button1_Click;  // Læs CSV handler
+
+                if (buttonTilføjRækker != null)
+                    buttonTilføjRækker.Click += button3_Click;  // Tilføj Rækker handler
+
+                if (button4 != null)
+                    button4.Click += button4_Click;  // Gem XML handler
+
+                System.Diagnostics.Debug.WriteLine("[Setup] XML Conversion event handlers wired");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"SetupXmlConversionEventHandlers error: {ex.Message}");
             }
         }
 
@@ -1063,8 +1144,8 @@ namespace TestvaerkstedetToolkit
             pair.ChildLabel = new Label
             {
                 Text = $"Child {nextXmlPairNumber}:",
-                Location = new Point(380, 15 + (nextXmlPairNumber - 2) * 30),
-                Size = new Size(60, 13),
+                Location = new Point(500, 15 + (nextXmlPairNumber - 2) * 30),
+                Size = new Size(70, 13),
                 AutoSize = true
             };
 
@@ -1072,16 +1153,16 @@ namespace TestvaerkstedetToolkit
             pair.ParentComboBox = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(105, 12 + (nextXmlPairNumber - 2) * 30),
-                Size = new Size(250, 21),
+                Location = new Point(110, 12 + (nextXmlPairNumber - 2) * 30),
+                Size = new Size(350, 21),
                 Name = $"cmbXmlParent{nextXmlPairNumber}"
             };
 
             pair.ChildComboBox = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(460, 12 + (nextXmlPairNumber - 2) * 30),
-                Size = new Size(250, 21),
+                Location = new Point(580, 12 + (nextXmlPairNumber - 2) * 30),
+                Size = new Size(350, 21),
                 Name = $"cmbXmlChild{nextXmlPairNumber}"
             };
 
@@ -1099,9 +1180,6 @@ namespace TestvaerkstedetToolkit
 
             xmlColumnPairs.Add(pair);
             nextXmlPairNumber++;
-
-            // Udvid panel højde hvis nødvendigt
-            pnlXmlDynamicColumns.Height = Math.Max(35, (nextXmlPairNumber - 1) * 30);
 
             UpdateXmlRemoveButtonState();
         }
@@ -1123,9 +1201,6 @@ namespace TestvaerkstedetToolkit
 
             xmlColumnPairs.Remove(lastPair);
             nextXmlPairNumber--;
-
-            // Juster panel højde
-            pnlXmlDynamicColumns.Height = Math.Max(35, (nextXmlPairNumber - 1) * 30);
 
             UpdateXmlRemoveButtonState();
         }
@@ -1525,9 +1600,6 @@ namespace TestvaerkstedetToolkit
             columnPairs.Add(pair);
             nextPairNumber++;
 
-            // Udvid panel højde hvis nødvendigt
-            pnlDynamicColumns.Height = Math.Max(35, (nextPairNumber - 1) * 30);
-
             UpdateRemoveButtonState();
         }
 
@@ -1548,9 +1620,6 @@ namespace TestvaerkstedetToolkit
 
             columnPairs.Remove(lastPair);
             nextPairNumber--;
-
-            // Juster panel højde
-            pnlDynamicColumns.Height = Math.Max(35, (nextPairNumber - 1) * 30);
 
             UpdateRemoveButtonState();
         }

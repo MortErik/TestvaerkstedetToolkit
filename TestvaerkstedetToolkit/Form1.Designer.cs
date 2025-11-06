@@ -74,7 +74,7 @@ namespace TestvaerkstedetToolkit
             this.btnExportMissing = new System.Windows.Forms.Button();
             this.btnCopySelected = new System.Windows.Forms.Button();
 
-            // XML FK REPAIR GROUP (REFACTORED)
+            // XML FK REPAIR GROUP
             this.grpXMLFKRepair = new System.Windows.Forms.GroupBox();
             this.lblTableIndex = new System.Windows.Forms.Label();
             this.txtTableIndex = new System.Windows.Forms.TextBox();
@@ -115,12 +115,18 @@ namespace TestvaerkstedetToolkit
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.richTextBoxID = new System.Windows.Forms.RichTextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label_CSVKolonner = new System.Windows.Forms.Label();
 
             this.grpFKRepair.SuspendLayout();
             this.grpXMLFKRepair.SuspendLayout();
             this.grpXMLConversion.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTekst)).BeginInit();
             this.SuspendLayout();
+
 
             // ═══════════════════════════════════════════════════════════
             // MODE SELECTION RADIO BUTTONS
@@ -165,14 +171,14 @@ namespace TestvaerkstedetToolkit
             // progressBar1
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 715);
+            this.progressBar1.Location = new System.Drawing.Point(12, 795);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(1168, 23);
             this.progressBar1.TabIndex = 100;
             this.progressBar1.Visible = false;
 
             // ═══════════════════════════════════════════════════════════
-            // CSV FK REPAIR GROUP (UNCHANGED)
+            // CSV FK REPAIR GROUP
             // ═══════════════════════════════════════════════════════════
 
             this.grpFKRepair.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -289,12 +295,12 @@ namespace TestvaerkstedetToolkit
             this.pnlDynamicColumns.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlDynamicColumns.Location = new System.Drawing.Point(130, 155);
             this.pnlDynamicColumns.Name = "pnlDynamicColumns";
-            this.pnlDynamicColumns.Size = new System.Drawing.Size(900, 35);
+            this.pnlDynamicColumns.Size = new System.Drawing.Size(900, 120);
             this.pnlDynamicColumns.TabIndex = 7;
             this.pnlDynamicColumns.AutoScroll = true;
 
             // btnAnalyzeFK
-            this.btnAnalyzeFK.Location = new System.Drawing.Point(130, 205);
+            this.btnAnalyzeFK.Location = new System.Drawing.Point(130, 290);
             this.btnAnalyzeFK.Name = "btnAnalyzeFK";
             this.btnAnalyzeFK.Size = new System.Drawing.Size(150, 30);
             this.btnAnalyzeFK.TabIndex = 8;
@@ -304,7 +310,7 @@ namespace TestvaerkstedetToolkit
 
             // lblFKStats
             this.lblFKStats.AutoSize = true;
-            this.lblFKStats.Location = new System.Drawing.Point(300, 215);
+            this.lblFKStats.Location = new System.Drawing.Point(300, 300);
             this.lblFKStats.Name = "lblFKStats";
             this.lblFKStats.Size = new System.Drawing.Size(150, 13);
             this.lblFKStats.TabIndex = 0;
@@ -313,7 +319,7 @@ namespace TestvaerkstedetToolkit
 
             // labelDummyText
             this.labelDummyText.AutoSize = true;
-            this.labelDummyText.Location = new System.Drawing.Point(20, 250);
+            this.labelDummyText.Location = new System.Drawing.Point(20, 335);
             this.labelDummyText.Name = "labelDummyText";
             this.labelDummyText.Size = new System.Drawing.Size(75, 13);
             this.labelDummyText.TabIndex = 0;
@@ -322,15 +328,15 @@ namespace TestvaerkstedetToolkit
             // txtDummyText
             this.txtDummyText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDummyText.Location = new System.Drawing.Point(130, 247);
+            this.txtDummyText.Location = new System.Drawing.Point(130, 332);
             this.txtDummyText.Name = "txtDummyText";
             this.txtDummyText.Size = new System.Drawing.Size(900, 20);
             this.txtDummyText.TabIndex = 9;
-            this.txtDummyText.Text = "Betydning ukendt";
+            this.txtDummyText.Text = "Betydning ukendt. Rækken er tilføjet under aflevering til arkiv, for at sikre referentiel integritet i databasen af hensyn til langtidsbevaring";
 
             // labelMissingValues
             this.labelMissingValues.AutoSize = true;
-            this.labelMissingValues.Location = new System.Drawing.Point(20, 285);
+            this.labelMissingValues.Location = new System.Drawing.Point(20, 370);
             this.labelMissingValues.Name = "labelMissingValues";
             this.labelMissingValues.Size = new System.Drawing.Size(100, 13);
             this.labelMissingValues.TabIndex = 0;
@@ -340,19 +346,19 @@ namespace TestvaerkstedetToolkit
             this.lstMissingValues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstMissingValues.Location = new System.Drawing.Point(130, 285);
+            this.lstMissingValues.Location = new System.Drawing.Point(130, 370);
             this.lstMissingValues.Name = "lstMissingValues";
             this.lstMissingValues.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lstMissingValues.Size = new System.Drawing.Size(700, 250);
+            this.lstMissingValues.Size = new System.Drawing.Size(700, 200);
             this.lstMissingValues.TabIndex = 10;
 
             // btnGenerateDummies
             this.btnGenerateDummies.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenerateDummies.Location = new System.Drawing.Point(850, 285);
+            this.btnGenerateDummies.Location = new System.Drawing.Point(850, 370);
             this.btnGenerateDummies.Name = "btnGenerateDummies";
             this.btnGenerateDummies.Size = new System.Drawing.Size(180, 35);
             this.btnGenerateDummies.TabIndex = 11;
-            this.btnGenerateDummies.Text = "Generate Dummy CSV";
+            this.btnGenerateDummies.Text = "Generate CSV";
             this.btnGenerateDummies.UseVisualStyleBackColor = true;
             this.btnGenerateDummies.Enabled = false;
             this.btnGenerateDummies.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
@@ -360,7 +366,7 @@ namespace TestvaerkstedetToolkit
 
             // btnExportMissing
             this.btnExportMissing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExportMissing.Location = new System.Drawing.Point(850, 330);
+            this.btnExportMissing.Location = new System.Drawing.Point(850, 415);
             this.btnExportMissing.Name = "btnExportMissing";
             this.btnExportMissing.Size = new System.Drawing.Size(180, 25);
             this.btnExportMissing.TabIndex = 12;
@@ -370,7 +376,7 @@ namespace TestvaerkstedetToolkit
 
             // btnCopySelected
             this.btnCopySelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCopySelected.Location = new System.Drawing.Point(850, 365);
+            this.btnCopySelected.Location = new System.Drawing.Point(850, 450);
             this.btnCopySelected.Name = "btnCopySelected";
             this.btnCopySelected.Size = new System.Drawing.Size(180, 25);
             this.btnCopySelected.TabIndex = 13;
@@ -403,7 +409,7 @@ namespace TestvaerkstedetToolkit
             this.grpFKRepair.Controls.Add(this.btnCopySelected);
 
             // ═══════════════════════════════════════════════════════════
-            // XML FK REPAIR GROUP (REFACTORED - NO XSD)
+            // XML FK REPAIR GROUP
             // ═══════════════════════════════════════════════════════════
 
             this.grpXMLFKRepair.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -411,7 +417,7 @@ namespace TestvaerkstedetToolkit
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grpXMLFKRepair.Location = new System.Drawing.Point(12, 45);
             this.grpXMLFKRepair.Name = "grpXMLFKRepair";
-            this.grpXMLFKRepair.Size = new System.Drawing.Size(1168, 660);
+            this.grpXMLFKRepair.Size = new System.Drawing.Size(1168, 740);
             this.grpXMLFKRepair.TabIndex = 4;
             this.grpXMLFKRepair.TabStop = false;
             this.grpXMLFKRepair.Text = "XML Foreign Key Repair (TableIndex)";
@@ -647,7 +653,7 @@ namespace TestvaerkstedetToolkit
             this.lblXmlCompositeKey = new System.Windows.Forms.Label();
             this.lblXmlCompositeKey.AutoSize = true;
             this.lblXmlCompositeKey.Location = new System.Drawing.Point(20, currentY);
-            this.lblXmlCompositeKey.Text = "sammensatte PK (Optional):";
+            this.lblXmlCompositeKey.Text = "Sammensatte PK (Optional):";
             this.lblXmlCompositeKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
 
             // Add/Remove buttons
@@ -671,12 +677,12 @@ namespace TestvaerkstedetToolkit
             // Dynamic columns panel
             this.pnlXmlDynamicColumns = new System.Windows.Forms.Panel();
             this.pnlXmlDynamicColumns.Location = new System.Drawing.Point(40, currentY);
-            this.pnlXmlDynamicColumns.Size = new System.Drawing.Size(900, 35);
+            this.pnlXmlDynamicColumns.Size = new System.Drawing.Size(970, 120);
             this.pnlXmlDynamicColumns.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlXmlDynamicColumns.AutoScroll = true;
             this.pnlXmlDynamicColumns.TabIndex = 11;
 
-            currentY += 50;
+            currentY += 135;
 
             // Analyze button
             this.btnAnalyzeXmlFK = new System.Windows.Forms.Button();
@@ -736,7 +742,7 @@ namespace TestvaerkstedetToolkit
 
             this.txtIntegrityDesc = new System.Windows.Forms.TextBox();
             this.txtIntegrityDesc.Location = new System.Drawing.Point(btnX, currentY + 82);
-            this.txtIntegrityDesc.Size = new System.Drawing.Size(500, 20);
+            this.txtIntegrityDesc.Size = new System.Drawing.Size(600, 20);
             this.txtIntegrityDesc.Multiline = false;
             this.txtIntegrityDesc.TabIndex = 16;
             this.txtIntegrityDesc.Text = "Betydning ukendt. Rækken er tilføjet under aflevering til arkiv, for at sikre referentiel integritet i databasen af hensyn til langtidsbevaring";
@@ -799,7 +805,7 @@ namespace TestvaerkstedetToolkit
             this.grpXMLFKRepair.Controls.Add(separator1);
 
             // ═══════════════════════════════════════════════════════════
-            // XML CONVERSION GROUP
+            // XML CONVERSION GROUP - ORIGINAL LAYOUT
             // ═══════════════════════════════════════════════════════════
 
             this.grpXMLConversion.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -813,120 +819,164 @@ namespace TestvaerkstedetToolkit
             this.grpXMLConversion.Text = "CSV til XML Konvertering";
             this.grpXMLConversion.Visible = false;
 
-            // richTextBoxXML
-            this.richTextBoxXML.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBoxXML.Location = new System.Drawing.Point(20, 25);
-            this.richTextBoxXML.Name = "richTextBoxXML";
-            this.richTextBoxXML.Size = new System.Drawing.Size(700, 500);
-            this.richTextBoxXML.TabIndex = 0;
-            this.richTextBoxXML.Text = "";
-
-            // buttonLæsCSV
-            this.buttonLæsCSV.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonLæsCSV.Location = new System.Drawing.Point(750, 25);
-            this.buttonLæsCSV.Name = "buttonLæsCSV";
-            this.buttonLæsCSV.Size = new System.Drawing.Size(150, 30);
-            this.buttonLæsCSV.TabIndex = 1;
-            this.buttonLæsCSV.Text = "Læs CSV";
-            this.buttonLæsCSV.UseVisualStyleBackColor = true;
-
-            // buttonTilføjRækker
-            this.buttonTilføjRækker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonTilføjRækker.Location = new System.Drawing.Point(750, 65);
-            this.buttonTilføjRækker.Name = "buttonTilføjRækker";
-            this.buttonTilføjRækker.Size = new System.Drawing.Size(150, 30);
-            this.buttonTilføjRækker.TabIndex = 2;
-            this.buttonTilføjRækker.Text = "Tilføj Rækker";
-            this.buttonTilføjRækker.UseVisualStyleBackColor = true;
-
-            // button4
-            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(750, 105);
+            // button4 - "Vælg tabel ..."
+            this.button4.Location = new System.Drawing.Point(11, 13);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(150, 30);
-            this.button4.TabIndex = 3;
-            this.button4.Text = "Gem XML";
+            this.button4.Size = new System.Drawing.Size(106, 23);
+            this.button4.TabIndex = 0;
+            this.button4.Text = "Vælg tabel ...";
             this.button4.UseVisualStyleBackColor = true;
 
             // textBoxTabel
-            this.textBoxTabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTabel.Location = new System.Drawing.Point(750, 160);
+            this.textBoxTabel.Location = new System.Drawing.Point(123, 13);
             this.textBoxTabel.Name = "textBoxTabel";
-            this.textBoxTabel.Size = new System.Drawing.Size(150, 20);
-            this.textBoxTabel.TabIndex = 4;
+            this.textBoxTabel.Size = new System.Drawing.Size(405, 20);
+            this.textBoxTabel.TabIndex = 1;
+
+            // buttonLæsCSV - "Indlæs CSV"
+            this.buttonLæsCSV.Enabled = false;
+            this.buttonLæsCSV.Location = new System.Drawing.Point(11, 45);
+            this.buttonLæsCSV.Name = "buttonLæsCSV";
+            this.buttonLæsCSV.Size = new System.Drawing.Size(106, 23);
+            this.buttonLæsCSV.TabIndex = 2;
+            this.buttonLæsCSV.Text = "Indlæs CSV";
+            this.buttonLæsCSV.UseVisualStyleBackColor = true;
 
             // textBoxID
-            this.textBoxID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxID.Location = new System.Drawing.Point(750, 200);
+            this.textBoxID.Location = new System.Drawing.Point(123, 47);
             this.textBoxID.Name = "textBoxID";
-            this.textBoxID.Size = new System.Drawing.Size(150, 20);
-            this.textBoxID.TabIndex = 5;
+            this.textBoxID.Size = new System.Drawing.Size(405, 20);
+            this.textBoxID.TabIndex = 3;
 
-            // label1
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            // label1 - "Standard tekst"
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(750, 143);
+            this.label1.Location = new System.Drawing.Point(12, 82);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 13);
+            this.label1.Size = new System.Drawing.Size(76, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Tabel navn:";
+            this.label1.Text = "Standard tekst";
 
             // textBoxStandardTekst
-            this.textBoxStandardTekst.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxStandardTekst.Location = new System.Drawing.Point(750, 240);
+            this.textBoxStandardTekst.Location = new System.Drawing.Point(123, 79);
             this.textBoxStandardTekst.Name = "textBoxStandardTekst";
-            this.textBoxStandardTekst.Size = new System.Drawing.Size(150, 20);
-            this.textBoxStandardTekst.TabIndex = 6;
+            this.textBoxStandardTekst.Size = new System.Drawing.Size(405, 20);
+            this.textBoxStandardTekst.TabIndex = 4;
+            this.textBoxStandardTekst.Text = ".... INDTAST TEKST ....";
+
+            // label3 - "Indsæt i kolonne"
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(534, 81);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(89, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Indsæt  i kolonne";
 
             // numericUpDownTekst
-            this.numericUpDownTekst.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownTekst.Location = new System.Drawing.Point(750, 280);
+            this.numericUpDownTekst.Location = new System.Drawing.Point(629, 79);
+            this.numericUpDownTekst.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             this.numericUpDownTekst.Name = "numericUpDownTekst";
-            this.numericUpDownTekst.Size = new System.Drawing.Size(150, 20);
-            this.numericUpDownTekst.TabIndex = 7;
+            this.numericUpDownTekst.Size = new System.Drawing.Size(40, 20);
+            this.numericUpDownTekst.TabIndex = 5;
+            this.numericUpDownTekst.Value = new decimal(new int[] { 1, 0, 0, 0 });
 
-            // label2
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            // label_CSVKolonner - "CSV1 ...."
+            this.label_CSVKolonner.AutoSize = true;
+            this.label_CSVKolonner.Location = new System.Drawing.Point(120, 116);
+            this.label_CSVKolonner.Name = "label_CSVKolonner";
+            this.label_CSVKolonner.Size = new System.Drawing.Size(49, 13);
+            this.label_CSVKolonner.TabIndex = 0;
+            this.label_CSVKolonner.Text = "CSV1 ....";
+
+            // label2 - "Vælg tabelkolonne"
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(750, 183);
+            this.label2.Location = new System.Drawing.Point(8, 127);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(50, 13);
+            this.label2.Size = new System.Drawing.Size(96, 13);
             this.label2.TabIndex = 0;
-            this.label2.Text = "ID navn:";
+            this.label2.Text = "Vælg tabelkolonne";
 
-            // label3
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(750, 223);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Standard tekst:";
+            // flowLayoutPanel1 - KRITISK KOMPONENT
+            this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(123, 132);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(405, 43);
+            this.flowLayoutPanel1.TabIndex = 6;
 
-            // richTextBoxID
+            // label4 - "CSV"
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(120, 194);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(28, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "CSV";
+
+            // label5 - "Tabel (kun delvist indlæst)"
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(381, 194);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(131, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Tabel (kun delvist indlæst)";
+
+            // richTextBoxID - CSV preview (venstre)
             this.richTextBoxID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBoxID.Location = new System.Drawing.Point(750, 320);
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.richTextBoxID.Location = new System.Drawing.Point(123, 216);
             this.richTextBoxID.Name = "richTextBoxID";
-            this.richTextBoxID.Size = new System.Drawing.Size(200, 200);
-            this.richTextBoxID.TabIndex = 8;
+            this.richTextBoxID.Size = new System.Drawing.Size(246, 304);
+            this.richTextBoxID.TabIndex = 7;
             this.richTextBoxID.Text = "";
+            this.richTextBoxID.WordWrap = false;
 
-            // Add all XML Conversion controls to group
-            this.grpXMLConversion.Controls.Add(this.richTextBoxXML);
-            this.grpXMLConversion.Controls.Add(this.buttonLæsCSV);
-            this.grpXMLConversion.Controls.Add(this.buttonTilføjRækker);
+            // richTextBoxXML - XML preview (højre)
+            this.richTextBoxXML.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxXML.Location = new System.Drawing.Point(384, 216);
+            this.richTextBoxXML.Name = "richTextBoxXML";
+            this.richTextBoxXML.Size = new System.Drawing.Size(796, 304);
+            this.richTextBoxXML.TabIndex = 8;
+            this.richTextBoxXML.Text = "";
+            this.richTextBoxXML.WordWrap = false;
+
+            // textBox1 - Instruktioner
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(709, 13);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(214, 86);
+            this.textBox1.TabIndex = 9;
+            this.textBox1.Text = "HUSK!  Dette program arbejder kun på valide XML filer og skemaer som er linie baseret (pretty print)  ";
+
+            // buttonTilføjRækker - "Tilføj nye rækker"
+            this.buttonTilføjRækker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonTilføjRækker.Enabled = false;
+            this.buttonTilføjRækker.Location = new System.Drawing.Point(1050, 189);
+            this.buttonTilføjRækker.Name = "buttonTilføjRækker";
+            this.buttonTilføjRækker.Size = new System.Drawing.Size(120, 23);
+            this.buttonTilføjRækker.TabIndex = 10;
+            this.buttonTilføjRækker.Text = "Tilføj nye rækker";
+            this.buttonTilføjRækker.UseVisualStyleBackColor = true;
+
+            // Add all controls to grpXMLConversion
             this.grpXMLConversion.Controls.Add(this.button4);
             this.grpXMLConversion.Controls.Add(this.textBoxTabel);
+            this.grpXMLConversion.Controls.Add(this.buttonLæsCSV);
             this.grpXMLConversion.Controls.Add(this.textBoxID);
             this.grpXMLConversion.Controls.Add(this.label1);
             this.grpXMLConversion.Controls.Add(this.textBoxStandardTekst);
-            this.grpXMLConversion.Controls.Add(this.numericUpDownTekst);
-            this.grpXMLConversion.Controls.Add(this.label2);
             this.grpXMLConversion.Controls.Add(this.label3);
+            this.grpXMLConversion.Controls.Add(this.numericUpDownTekst);
+            this.grpXMLConversion.Controls.Add(this.label_CSVKolonner);
+            this.grpXMLConversion.Controls.Add(this.label2);
+            this.grpXMLConversion.Controls.Add(this.flowLayoutPanel1);
+            this.grpXMLConversion.Controls.Add(this.label4);
+            this.grpXMLConversion.Controls.Add(this.label5);
             this.grpXMLConversion.Controls.Add(this.richTextBoxID);
+            this.grpXMLConversion.Controls.Add(this.richTextBoxXML);
+            this.grpXMLConversion.Controls.Add(this.textBox1);
+            this.grpXMLConversion.Controls.Add(this.buttonTilføjRækker);
 
             // ═══════════════════════════════════════════════════════════
             // FORM1 MAIN CONFIGURATION
@@ -935,7 +985,7 @@ namespace TestvaerkstedetToolkit
             // Form1
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1200, 750);
+            this.ClientSize = new System.Drawing.Size(1200, 830);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.radioFKRepair);
             this.Controls.Add(this.radioXMLFKRepair);
@@ -943,7 +993,7 @@ namespace TestvaerkstedetToolkit
             this.Controls.Add(this.grpFKRepair);
             this.Controls.Add(this.grpXMLFKRepair);
             this.Controls.Add(this.grpXMLConversion);
-            this.MinimumSize = new System.Drawing.Size(1216, 789);
+            this.MinimumSize = new System.Drawing.Size(1216, 869);
             this.Name = "Form1";
             this.Text = "Data Processing Tool - XML FK Repair Mode";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -998,7 +1048,7 @@ namespace TestvaerkstedetToolkit
         private System.Windows.Forms.Button btnExportMissing;
         private System.Windows.Forms.Button btnCopySelected;
 
-        // XML FK REPAIR (REFACTORED)
+        // XML FK REPAIR
         private System.Windows.Forms.GroupBox grpXMLFKRepair;
         private System.Windows.Forms.Label lblTableIndex;
         private System.Windows.Forms.TextBox txtTableIndex;
@@ -1039,6 +1089,11 @@ namespace TestvaerkstedetToolkit
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.RichTextBox richTextBoxID;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Label label_CSVKolonner;
 
         #endregion
     }

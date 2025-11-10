@@ -11,7 +11,7 @@ namespace TestvaerkstedetToolkit.Services
     public static class CompositePKSplitAlgorithm
     {
         /// <summary>
-        /// Generer split tables med composite PK support
+        /// Generer split tables med sammensat PK support
         /// </summary>
         public static List<SplitTable> GenerateSplitTables(UIDataContainer uiData)
         {
@@ -213,7 +213,7 @@ namespace TestvaerkstedetToolkit.Services
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine($"Validation successful: {splits.Count} splits generated with composite PK support");
+            System.Diagnostics.Debug.WriteLine($"Validation successful: {splits.Count} splits generated with sammensat PK support");
             return true;
         }
 
@@ -225,7 +225,7 @@ namespace TestvaerkstedetToolkit.Services
             var pkColumns = uiData.PrimaryKey.GetAllPrimaryKeyColumns();
 
             System.Diagnostics.Debug.WriteLine("");
-            System.Diagnostics.Debug.WriteLine("=== COMPOSITE PK SPLIT SUMMARY ===");
+            System.Diagnostics.Debug.WriteLine("=== sammensat PK SPLIT SUMMARY ===");
             System.Diagnostics.Debug.WriteLine($"Original table: {uiData.OriginalTableName}");
             System.Diagnostics.Debug.WriteLine($"PK columns: {string.Join(", ", pkColumns)} (Count: {pkColumns.Count})");
             System.Diagnostics.Debug.WriteLine($"Total original columns: {uiData.OriginalTableEntry.Columns.Count}");

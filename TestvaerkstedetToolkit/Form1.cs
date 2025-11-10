@@ -1034,12 +1034,49 @@ namespace TestvaerkstedetToolkit
                             CancellationToken.None
                         );
 
-                        progressBar1.Visible = false;
-                        lblXmlFKStats.Text = $"Genereret {missingKeys.Count:N0} nye rækker";
+                        // Opdater tableIndex.xml hvis tilgængelig
+                        bool tableIndexUpdated = false;
+                        if (!string.IsNullOrEmpty(currentXmlRepair.TableIndexPath) &&
+                            currentXmlRepair.ParentTableEntry != null)
+                        {
+                            try
+                            {
+                                lblXmlFKStats.Text = "Opdaterer tableIndex.xml...";
 
-                        MessageBox.Show($"Genereret repareret XML med {missingKeys.Count:N0} nye rækker\n\n" +
-                                      $"Output: {outputXmlPath}\n\n",
-                                      "Succes", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                UpdateTableIndexAfterRepair(
+                                    currentXmlRepair.TableIndexPath,
+                                    currentXmlRepair.ParentTableEntry.Name,
+                                    missingKeys.Count,
+                                    "Integritsfejl"
+                                );
+
+                                tableIndexUpdated = true;
+                            }
+                            catch (Exception tiEx)
+                            {
+                                // Ikke kritisk - XML er allerede genereret
+                                System.Diagnostics.Debug.WriteLine($"Kunne ikke opdatere tableIndex: {tiEx.Message}");
+                            }
+                        }
+
+                        // Skjul progress EN GANG
+                        progressBar1.Visible = false;
+                        lblXmlFKStats.Text = tableIndexUpdated ?
+                            $"Genereret {missingKeys.Count:N0} nye rækker - tableIndex opdateret" :
+                            $"Genereret {missingKeys.Count:N0} nye rækker";
+
+                        // Vis success message EN GANG
+                        string successMessage = $"Genereret repareret XML med {missingKeys.Count:N0} nye rækker\n\n" +
+                                              $"Output: {outputXmlPath}";
+
+                        if (tableIndexUpdated)
+                        {
+                            successMessage += "\n\ntableIndex.xml er blevet opdateret:\n" +
+                                            "- Tilføjet 'Integritsfejl' kolonne\n" +
+                                            $"- Opdateret antal rækker (+{missingKeys.Count:N0})";
+                        }
+
+                        MessageBox.Show(successMessage, "Succes", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
@@ -1072,9 +1109,90 @@ namespace TestvaerkstedetToolkit
             return comboBoxText.Split(new[] { ':', ' ', '(' }, StringSplitOptions.RemoveEmptyEntries)[0].Trim();
         }
 
+        /// <summary>
+        /// Opdater tableIndex.xml med ny "Integritsfejl" kolonne og opdateret row count
+        /// </summary>
+        private void UpdateTableIndexAfterRepair(
+            string tableIndexPath,
+            string tableName,
+            int addedRowCount,
+            string integrityColumnName = "Integritsfejl")
+        {
+            try
+            {
+                // Load tableIndex.xml
+                var doc = XDocument.Load(tableIndexPath);
+                var ns = doc.Root.GetDefaultNamespace();
+
+                // Find target table
+                var tablesElement = doc.Descendants(ns + "tables").First();
+                var targetTable = tablesElement.Elements(ns + "table")
+                    .FirstOrDefault(t => t.Element(ns + "name")?.Value == tableName);
+
+                if (targetTable == null)
+                {
+                    throw new InvalidOperationException($"Tabel '{tableName}' ikke fundet i tableIndex.xml");
+                }
+
+                // STEP 1: Tilføj "Integritsfejl" kolonne hvis den ikke findes
+                var columnsElement = targetTable.Element(ns + "columns");
+                if (columnsElement != null)
+                {
+                    // Tjek om kolonnen allerede findes
+                    bool integrityColumnExists = columnsElement.Elements(ns + "column")
+                        .Any(c => c.Element(ns + "name")?.Value == integrityColumnName);
+
+                    if (!integrityColumnExists)
+                    {
+                        // Find højeste columnID nummer
+                        int maxColumnNumber = 0;
+                        foreach (var column in columnsElement.Elements(ns + "column"))
+                        {
+                            string columnID = column.Element(ns + "columnID")?.Value ?? "";
+                            if (columnID.StartsWith("c") && int.TryParse(columnID.Substring(1), out int num))
+                            {
+                                maxColumnNumber = Math.Max(maxColumnNumber, num);
+                            }
+                        }
+
+                        // Opret ny kolonne
+                        string newColumnID = $"c{maxColumnNumber + 1}";
+                        var newColumn = new XElement(ns + "column",
+                            new XElement(ns + "name", integrityColumnName),
+                            new XElement(ns + "columnID", newColumnID),
+                            new XElement(ns + "type", "VARCHAR(50)"),
+                            new XElement(ns + "typeOriginal", ""),
+                            new XElement(ns + "nullable", "true"),
+                            new XElement(ns + "description",
+                                "Betydning ukendt. Rækken er tilføjet under aflevering til arkiv, " +
+                                "for at sikre referentiel integritet i databasen af hensyn til langtidsbevaring")
+                        );
+
+                        columnsElement.Add(newColumn);
+                    }
+                }
+
+                // STEP 2: Opdater row count
+                var rowsElement = targetTable.Element(ns + "rows");
+                if (rowsElement != null)
+                {
+                    int currentRows = int.TryParse(rowsElement.Value, out int rows) ? rows : 0;
+                    int newRowCount = currentRows + addedRowCount;
+                    rowsElement.Value = newRowCount.ToString();
+                }
+
+                // Gem opdateret tableIndex.xml
+                doc.Save(tableIndexPath);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Fejl ved opdatering af tableIndex.xml: {ex.Message}", ex);
+            }
+        }
+
         #endregion
 
-        #region XML FK Repair - Composite PK Support
+        #region XML FK Repair - sammensat PK Support
 
         /// <summary>
         /// Populate en ComboBox med XML kolonner

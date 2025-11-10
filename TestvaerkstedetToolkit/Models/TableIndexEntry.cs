@@ -43,7 +43,7 @@ namespace TestvaerkstedetToolkit.Models
             if (PrimaryKeyColumns.Count == 1)
                 return $"PK: {PrimaryKeyColumns[0]}";
 
-            return $"Composite PK: {string.Join(", ", PrimaryKeyColumns)}";
+            return $"sammensat PK: {string.Join(", ", PrimaryKeyColumns)}";
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace TestvaerkstedetToolkit.Models
         {
             get
             {
-                // Hvis composite PK, brug første kolonne til backward compatibility
+                // Hvis sammensat PK, brug første kolonne til backward compatibility
                 string primaryColumnName = PrimaryKeyColumns?.FirstOrDefault() ?? PrimaryKeyName;
 
                 // Find primærnøgle kolonne fra navnet

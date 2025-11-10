@@ -53,10 +53,10 @@ namespace TestvaerkstedetToolkit
 
         #endregion
 
-        #region Composite PK Event Handlers
+        #region sammensat PK Event Handlers
 
         /// <summary>
-        /// Event handler for composite PK ændringer
+        /// Event handler for sammensat PK ændringer
         /// </summary>
         private void CompositePKSelector_PrimaryKeyChanged(object sender, EventArgs e)
         {
@@ -171,7 +171,7 @@ namespace TestvaerkstedetToolkit
                     compositePKSelector.SetPrimaryKeyInfo(pkInfo);
                 }
 
-                // Update UI med composite PK info
+                // Update UI med sammensat PK info
                 lblTableInfo.Text = $"Tabel: {currentTableEntry.Name} ({currentTableEntry.Columns.Count} kolonner) | {currentTableEntry.GetPrimaryKeyDisplayText()}";
                 lblTableInfo.ForeColor = Color.DarkGreen;
 
@@ -598,7 +598,7 @@ namespace TestvaerkstedetToolkit
             }
 
             string pkDisplayText = pkColumns.Count > 1 ?
-                $"Composite PK: {string.Join(", ", pkColumns)}" :
+                $"sammensat PK: {string.Join(", ", pkColumns)}" :
                 $"PK: {pkColumns.FirstOrDefault() ?? "Ingen"}";
 
             lblPreviewInfo.Text = $"Split: {resultTables.Count} tabeller | {pkDisplayText} | Total: {currentTableEntry.Columns.Count} kolonner";
@@ -665,7 +665,7 @@ namespace TestvaerkstedetToolkit
         #region Primary Key Analysis
 
         /// <summary>
-        /// INTEGRERET PK Analyse med composite support - analysér combined unikhed
+        /// PK Analyse med composite support - analysér combined unikhed
         /// </summary>
         private async void btnAnalyzePK_Click(object sender, EventArgs e)
         {
@@ -1111,7 +1111,7 @@ namespace TestvaerkstedetToolkit
 
                 if (!string.IsNullOrEmpty(uiData.TableIndexPath))
                 {
-                    logger.LogInfo("Starter opdatering af tableIndex.xml med composite PK support");
+                    logger.LogInfo("Starter opdatering af tableIndex.xml med sammensat PK support");
                     try
                     {
                         string tableIndexLog = GenerateUpdatedTableIndex(uiData.Tables, tempDirectory, uiData, originalTableNumber, nextTableNumber);
@@ -1636,7 +1636,7 @@ namespace TestvaerkstedetToolkit
         #region File Generation
 
         /// <summary>
-        /// Generer XML og XSD filer for split tabel med composite PK support
+        /// Generer XML og XSD filer for split tabel med sammensat PK support
         /// </summary>
         private void GenerateTableFiles(SplitTable table, string outputDirectory, UIDataContainer uiData, int tableNumber)
         {
@@ -1661,7 +1661,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Generer XML fil for split tabel med composite PK support
+        /// Generer XML fil for split tabel med sammensat PK support
         /// </summary>
         private void GenerateXMLFile(SplitTable table, string xmlPath, string newNamespace, UIDataContainer uiData, int tableNumber)
         {
@@ -1687,7 +1687,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Process XML rækker med composite PK support og korrekt kolonne placering
+        /// Process XML rækker med sammensat PK support og korrekt kolonne placering
         /// </summary>
         private void ProcessXMLRowsWithCompositePK(XmlWriter writer, SplitTable table, UIDataContainer uiData)
         {
@@ -2007,7 +2007,7 @@ namespace TestvaerkstedetToolkit
 
         /// <summary>
         /// Opdater alle foreign key referencer til split tabeller
-        /// Håndterer composite FKs der spænder på tværs af splits
+        /// Håndterer sammensatte FKs der spænder på tværs af splits
         /// </summary>
         private string UpdateForeignKeyReferences(XDocument doc, XNamespace ns, List<SplitTable> splitTables, UIDataContainer uiData)
         {
@@ -2064,10 +2064,10 @@ namespace TestvaerkstedetToolkit
                     string oldValue = referencedTableElement.Value;
                     referencedTableElement.Value = targetSplit.TableName;
 
-                    // KRITISK: Hvis target har composite PK, udvid FK med manglende kolonner
+                    // Hvis target har sammensat PK, udvid FK med manglende kolonner
                     if (pkColumns.Count > 1)
                     {
-                        // Find source tabelens kolonner for at matche composite PK
+                        // Find source tabelens kolonner for at matche sammensat PK
                         var sourceTableElement = fkElement.Ancestors(ns + "table").First();
                         var sourceColumns = sourceTableElement.Descendants(ns + "column")
                             .Select(c => c.Element(ns + "name")?.Value)
@@ -2094,13 +2094,13 @@ namespace TestvaerkstedetToolkit
 
                         if (addedColumns.Count > 0)
                         {
-                            log.AppendLine($"     Opdateret til composite FK: {oldValue} → {targetSplit.TableName}");
+                            log.AppendLine($"     Opdateret til sammensat FK: {oldValue} → {targetSplit.TableName}");
                             log.AppendLine($"      Tilføjet {addedColumns.Count} PK kolonne(r): {string.Join(", ", addedColumns)}");
                         }
                         else
                         {
                             log.AppendLine($"     Opdateret: {oldValue} → {targetSplit.TableName}");
-                            log.AppendLine($"      ADVARSEL: Source tabel mangler composite PK kolonner!");
+                            log.AppendLine($"      ADVARSEL: Source tabel mangler sammensat PK kolonner!");
                         }
                     }
                     else
@@ -2113,8 +2113,8 @@ namespace TestvaerkstedetToolkit
                 }
                 else
                 {
-                    // COMPOSITE FK - multiple kolonner
-                    log.AppendLine($"    Composite FK med {references.Count} kolonner:");
+                    // Sammensatte FK - multiple kolonner
+                    log.AppendLine($"    Sammensatte FK med {references.Count} kolonner:");
 
                     // Group references by target split
                     var referencesByTarget = new Dictionary<string, List<XElement>>();
@@ -2368,7 +2368,7 @@ namespace TestvaerkstedetToolkit
 
                 sql.AppendLine($"INNER JOIN {table.TableName} t{tableNum}");
 
-                // JOIN conditions på alle composite PK kolonner
+                // JOIN conditions på alle sammensat PK kolonner
                 var joinConditions = new List<string>();
                 foreach (var pkColumn in pkColumns)
                 {
@@ -2385,7 +2385,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Opret komplet table element med composite PK support
+        /// Opret komplet table element med sammensat PK support
         /// </summary>
         private XElement CreateCompleteTableElementWithCompositePK(SplitTable splitTable, List<SplitTable> allSplits, XNamespace ns, UIDataContainer uiData, int tableNumber)
         {
@@ -2400,11 +2400,11 @@ namespace TestvaerkstedetToolkit
             tableElement.Add(new XElement(ns + "name", splitTable.TableName));
             tableElement.Add(new XElement(ns + "folder", $"table{tableNumber}"));
 
-            // Description med composite PK information
+            // Description med sammensat PK information
             string description = CreateCompositePKDescription(splitTable, allSplits, uiData);
             tableElement.Add(new XElement(ns + "description", description));
 
-            // Columns med composite PK logic
+            // Columns med sammensat PK logic
             var columnsElement = CreateColumnsElementWithCompositePK(splitTable, uiData, ns);
             tableElement.Add(columnsElement);
 
@@ -2426,7 +2426,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Opret columns element med composite PK placering logik
+        /// Opret columns element med sammensat PK placering logik
         /// </summary>
         private XElement CreateColumnsElementWithCompositePK(SplitTable splitTable, UIDataContainer uiData, XNamespace ns)
         {
@@ -2533,7 +2533,7 @@ namespace TestvaerkstedetToolkit
 
             if (pkInfo.IsComposite)
             {
-                // Composite PK navn
+                // sammensat PK navn
                 primaryKeySection.Add(new XElement(ns + "name", $"PK_{tableName}_Composite"));
 
                 // Tilføj alle PK kolonner
@@ -2553,7 +2553,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Opret foreign keys med composite PK cross-references
+        /// Opret foreign keys med sammensat PK cross-references
         /// </summary>
         private XElement CreateForeignKeysElementWithCompositePK(SplitTable splitTable, List<SplitTable> allSplits, XNamespace ns, UIDataContainer uiData)
         {
@@ -2586,12 +2586,12 @@ namespace TestvaerkstedetToolkit
                 }
             }
 
-            // 2. CROSS-REFERENCE FOREIGN KEYS mellem split tabeller (COMPOSITE)
+            // 2. CROSS-REFERENCE FOREIGN KEYS mellem split tabeller (sammensat)
             if (allSplits.Count > 1)
             {
                 foreach (var otherSplit in allSplits.Where(s => s.SplitIndex != splitTable.SplitIndex))
                 {
-                    // Opret ÉN composite FK med alle PK kolonner
+                    // Opret ÉN sammensat FK med alle PK kolonner
                     var crossRefFK = new XElement(ns + "foreignKey");
 
                     string currentTableName = $"{uiData.OriginalTableEntry.Name}_{splitTable.SplitIndex}";
@@ -2618,7 +2618,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Opret beskrivelse med composite PK information
+        /// Opret beskrivelse med sammensat PK information
         /// </summary>
         private string CreateCompositePKDescription(SplitTable splitTable, List<SplitTable> allSplits, UIDataContainer uiData)
         {
@@ -2675,7 +2675,7 @@ namespace TestvaerkstedetToolkit
         #region Data Collection
 
         /// <summary>
-        /// Collect UI data med composite PK support
+        /// Collect UI data med sammensat PK support
         /// </summary>
         private UIDataContainer CollectUIData()
         {
@@ -2697,7 +2697,7 @@ namespace TestvaerkstedetToolkit
 
             if (resultTables != null && resultTables.Count > 0)
             {
-                // Konverter UI-baserede splits til composite PK format
+                // Konverter UI-baserede splits til sammensat PK format
                 container.Tables = ConvertUIResultsToCompositePK(container);
             }
             else
@@ -2710,7 +2710,7 @@ namespace TestvaerkstedetToolkit
         }
 
         /// <summary>
-        /// Konverter UI resultTables til composite PK format
+        /// Konverter UI resultTables til sammensat PK format
         /// </summary>
         private List<SplitTable> ConvertUIResultsToCompositePK(UIDataContainer uiData)
         {

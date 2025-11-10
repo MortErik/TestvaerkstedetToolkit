@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TestvaerkstedetToolkit.Models
 {
     /// <summary>
-    /// UIDataContainer med TableIndex metadata og composite PK support
+    /// UIDataContainer med TableIndex metadata og sammensat PK support
     /// </summary>
     public class UIDataContainer
     {

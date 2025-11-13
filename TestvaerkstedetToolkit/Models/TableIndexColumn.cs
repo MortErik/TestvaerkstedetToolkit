@@ -26,11 +26,10 @@ namespace TestvaerkstedetToolkit.Models
 
         /// <summary>
         /// Get default værdi baseret på datatype
+        /// Kun PK og date/time kolonner får værdier, resten står tomt
         /// </summary>
         public string GetDefaultValue()
         {
-            if (IsNullable) return null; // Will generate xsi:nil="true"
-
             switch (DataType?.ToUpper())
             {
                 case "DATE":
@@ -39,13 +38,8 @@ namespace TestvaerkstedetToolkit.Models
                     return "23:59:59";
                 case "TIMESTAMP":
                     return "9999-12-31T23:59:59";
-                case "INTEGER":
-                    return "0";
-                case "DECIMAL":
-                    return "0.0";
-                case "BOOLEAN":
-                    return "false";
                 default:
+                    // Alle andre typer (INTEGER, DECIMAL, BOOLEAN, VARCHAR osv) → tom værdi
                     return "";
             }
         }

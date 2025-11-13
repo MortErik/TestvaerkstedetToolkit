@@ -356,9 +356,9 @@ namespace TestvaerkstedetToolkit
             this.btnGenerateDummies.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGenerateDummies.Location = new System.Drawing.Point(850, 370);
             this.btnGenerateDummies.Name = "btnGenerateDummies";
-            this.btnGenerateDummies.Size = new System.Drawing.Size(180, 35);
+            this.btnGenerateDummies.Size = new System.Drawing.Size(220, 35);
             this.btnGenerateDummies.TabIndex = 11;
-            this.btnGenerateDummies.Text = "Generate CSV";
+            this.btnGenerateDummies.Text = "Generer Nye Rækker til Parent";
             this.btnGenerateDummies.UseVisualStyleBackColor = true;
             this.btnGenerateDummies.Enabled = false;
             this.btnGenerateDummies.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
@@ -366,7 +366,7 @@ namespace TestvaerkstedetToolkit
 
             // btnExportMissing
             this.btnExportMissing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExportMissing.Location = new System.Drawing.Point(850, 415);
+            this.btnExportMissing.Location = new System.Drawing.Point(869, 415);
             this.btnExportMissing.Name = "btnExportMissing";
             this.btnExportMissing.Size = new System.Drawing.Size(180, 25);
             this.btnExportMissing.TabIndex = 12;
@@ -376,7 +376,7 @@ namespace TestvaerkstedetToolkit
 
             // btnCopySelected
             this.btnCopySelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCopySelected.Location = new System.Drawing.Point(850, 450);
+            this.btnCopySelected.Location = new System.Drawing.Point(869, 450);
             this.btnCopySelected.Name = "btnCopySelected";
             this.btnCopySelected.Size = new System.Drawing.Size(180, 25);
             this.btnCopySelected.TabIndex = 13;
@@ -750,8 +750,8 @@ namespace TestvaerkstedetToolkit
             // Generate button
             this.btnGenerateFixedXml = new System.Windows.Forms.Button();
             this.btnGenerateFixedXml.Location = new System.Drawing.Point(btnX, currentY + 107);
-            this.btnGenerateFixedXml.Size = new System.Drawing.Size(180, 35);
-            this.btnGenerateFixedXml.Text = "Generate Repaired XML";
+            this.btnGenerateFixedXml.Size = new System.Drawing.Size(220, 35);
+            this.btnGenerateFixedXml.Text = "Generer Nye Rækker til Parent";
             this.btnGenerateFixedXml.TabIndex = 17;
             this.btnGenerateFixedXml.UseVisualStyleBackColor = true;
             this.btnGenerateFixedXml.Enabled = false;

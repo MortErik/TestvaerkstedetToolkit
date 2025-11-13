@@ -434,7 +434,7 @@ namespace TestvaerkstedetToolkit
 
         #endregion
 
-        #region XML FK Repair - Refactored Without XSD
+        #region XML FK Repair
 
         /// <summary>
         /// XML kolonne information parsed direkte fra XML
@@ -711,7 +711,7 @@ namespace TestvaerkstedetToolkit
 
         #endregion
 
-        #region XML FK Repair - Column Parsing WITHOUT XSD
+        #region XML FK Repair - Column Parsing
 
         /// <summary>
         /// Load XML kolonner direkte fra XML fil
@@ -884,7 +884,7 @@ namespace TestvaerkstedetToolkit
 
         #endregion
 
-        #region XML FK Repair - Analysis and Generation
+        #region XML FK Repair - Analysis og Generation
 
         /// <summary>
         /// Analyzer XML FK relationships
@@ -977,118 +977,206 @@ namespace TestvaerkstedetToolkit
                 return;
             }
 
-            using (var saveDialog = new SaveFileDialog())
-            {
-                saveDialog.Filter = "XML filer|*.xml";
-                saveDialog.Title = "Gem repareret Parent XML";
-                saveDialog.FileName = Path.GetFileNameWithoutExtension(currentXmlRepair.ParentXmlPath) + "_repaired.xml";
+            string outputXmlPath = null;
+            string outputDirectory = null;
+            bool useStructuredOutput = false;
 
-                if (saveDialog.ShowDialog() == DialogResult.OK)
+            // Brug structured output hvis tableIndex er tilgængelig
+            if (!string.IsNullOrEmpty(currentXmlRepair.TableIndexPath) &&
+                currentXmlRepair.ParentTableEntry != null)
+            {
+                // OUTPUT PATH
+                useStructuredOutput = true;
+                string avidVersion = ExtractAvidVersion(currentXmlRepair.TableIndexPath);
+                string tableName = currentXmlRepair.ParentTableEntry.Name;
+
+                try
+                {
+                    outputDirectory = CreateRepairOutputDirectory(avidVersion, tableName);
+                    string tableFolder = currentXmlRepair.ParentTableEntry.Folder; // "table1", "table2", etc.
+                    outputXmlPath = Path.Combine(outputDirectory, $"{tableFolder}_repaired.xml");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Kunne ikke oprette output mappe: {ex.Message}\nBruger fallback SaveFileDialog.",
+                                  "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    useStructuredOutput = false;
+                }
+            }
+
+            // Brug SaveFileDialog hvis structured output ikke er muligt
+            if (!useStructuredOutput)
+            {
+                using (var saveDialog = new SaveFileDialog())
+                {
+                    saveDialog.Filter = "XML filer|*.xml";
+                    saveDialog.Title = "Gem repareret Parent XML";
+
+                    string defaultFileName;
+                    if (currentXmlRepair.ParentTableEntry != null &&
+                        !string.IsNullOrEmpty(currentXmlRepair.ParentTableEntry.Folder))
+                    {
+                        defaultFileName = $"{currentXmlRepair.ParentTableEntry.Folder}_repaired.xml";
+                    }
+                    else
+                    {
+                        defaultFileName = Path.GetFileNameWithoutExtension(currentXmlRepair.ParentXmlPath) + "_repaired.xml";
+                    }
+
+                    saveDialog.FileName = defaultFileName;
+
+                    if (saveDialog.ShowDialog() != DialogResult.OK)
+                        return;
+
+                    outputXmlPath = saveDialog.FileName;
+                }
+            }
+
+            // EXECUTE REPAIR
+            try
+            {
+                btnGenerateFixedXml.Enabled = false;
+                progressBar1.Visible = true;
+                progressBar1.Style = ProgressBarStyle.Continuous;
+
+                var missingKeys = lstXmlMissingValues.Items.Cast<string>().ToList();
+                string integrityDescription = txtIntegrityDesc.Text;
+
+                // Saml alle key kolonner
+                var keyColumns = new List<string>();
+                keyColumns.Add(ExtractColumnName(cmbParentXmlColumns.Text));
+
+                foreach (var pair in xmlColumnPairs)
+                {
+                    string parentColName = ExtractColumnName(pair.ParentComboBox.Text);
+                    if (!string.IsNullOrEmpty(parentColName) && !keyColumns.Contains(parentColName))
+                    {
+                        keyColumns.Add(parentColName);
+                    }
+                }
+
+                var progress = new Progress<(long processed, string stage)>(update =>
+                {
+                    lblXmlFKStats.Text = $"{update.stage}: {update.processed:N0}";
+                    if (update.processed > 0)
+                    {
+                        progressBar1.Value = Math.Min((int)(update.processed % 100), 100);
+                    }
+                });
+
+                var repairTool = new ScalableXmlFKRepair();
+                var tableEntry = currentXmlRepair.ParentTableEntry;
+
+                // Generer repareret XML
+                await repairTool.GenerateRepairedXmlAsync(
+                    currentXmlRepair.ParentXmlPath,
+                    outputXmlPath,
+                    missingKeys,
+                    keyColumns,
+                    integrityDescription,
+                    tableEntry,
+                    progress,
+                    CancellationToken.None
+                );
+
+                // Opdater tableIndex hvis structured output
+                bool tableIndexUpdated = false;
+                if (useStructuredOutput && !string.IsNullOrEmpty(currentXmlRepair.TableIndexPath))
                 {
                     try
                     {
-                        btnGenerateFixedXml.Enabled = false;
-                        progressBar1.Visible = true;
-                        progressBar1.Style = ProgressBarStyle.Continuous;
+                        lblXmlFKStats.Text = "Opdaterer tableIndex.xml...";
 
-                        string outputXmlPath = saveDialog.FileName;
+                        string outputTableIndexPath = Path.Combine(outputDirectory, "tableIndex_updated.xml");
 
-                        var missingKeys = lstXmlMissingValues.Items.Cast<string>().ToList();
-                        string integrityDescription = txtIntegrityDesc.Text;
-
-                        // Get first key column for single-column FK
-                        var keyColumns = new List<string>();
-                        keyColumns.Add(ExtractColumnName(cmbParentXmlColumns.Text));  // Primary key
-
-                        var progress = new Progress<(long processed, string stage)>(update =>
-                        {
-                            lblXmlFKStats.Text = $"{update.stage}: {update.processed:N0}";
-                            if (update.processed > 0)
-                            {
-                                progressBar1.Value = Math.Min((int)(update.processed % 100), 100);
-                            }
-                        });
-
-                        var repairTool = new ScalableXmlFKRepair();
-
-                        // Pass optional tableIndex metadata
-                        var tableEntry = currentXmlRepair.ParentTableEntry;
-
-                        foreach (var pair in xmlColumnPairs)
-                        {
-                            string parentColName = ExtractColumnName(pair.ParentComboBox.Text);
-                            if (!string.IsNullOrEmpty(parentColName) && !keyColumns.Contains(parentColName))
-                            {
-                                keyColumns.Add(parentColName);
-                            }
-                        }
-
-                        await repairTool.GenerateRepairedXmlAsync(
-                            currentXmlRepair.ParentXmlPath,
-                            outputXmlPath,
-                            missingKeys,               // ["123|ABC|999", "456|DEF|888"]
-                            keyColumns,                // ["c1", "c2", "c3"]
-                            integrityDescription,
-                            tableEntry,
-                            progress,
-                            CancellationToken.None
+                        UpdateTableIndexAfterRepair(
+                            currentXmlRepair.TableIndexPath,      // Source (læs fra original)
+                            outputTableIndexPath,                  // Output (gem til ny fil)
+                            currentXmlRepair.ParentTableEntry.Name,
+                            missingKeys.Count,
+                            "Integritsfejl"
                         );
 
-                        // Opdater tableIndex.xml hvis tilgængelig
-                        bool tableIndexUpdated = false;
-                        if (!string.IsNullOrEmpty(currentXmlRepair.TableIndexPath) &&
-                            currentXmlRepair.ParentTableEntry != null)
-                        {
-                            try
-                            {
-                                lblXmlFKStats.Text = "Opdaterer tableIndex.xml...";
+                        tableIndexUpdated = true;
+                    }
+                    catch (Exception tiEx)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Kunne ikke opdatere tableIndex: {tiEx.Message}");
+                    }
+                }
 
-                                UpdateTableIndexAfterRepair(
-                                    currentXmlRepair.TableIndexPath,
-                                    currentXmlRepair.ParentTableEntry.Name,
-                                    missingKeys.Count,
-                                    "Integritsfejl"
-                                );
+                // UI opdatering
+                progressBar1.Visible = false;
 
-                                tableIndexUpdated = true;
-                            }
-                            catch (Exception tiEx)
-                            {
-                                // Ikke kritisk - XML er allerede genereret
-                                System.Diagnostics.Debug.WriteLine($"Kunne ikke opdatere tableIndex: {tiEx.Message}");
-                            }
-                        }
+                if (useStructuredOutput)
+                {
+                    lblXmlFKStats.Text = tableIndexUpdated
+                        ? $"Genereret {missingKeys.Count:N0} nye rækker - tableIndex opdateret"
+                        : $"Genereret {missingKeys.Count:N0} nye rækker";
+                }
+                else
+                {
+                    lblXmlFKStats.Text = $"Genereret {missingKeys.Count:N0} nye rækker";
+                }
 
-                        // Skjul progress EN GANG
-                        progressBar1.Visible = false;
-                        lblXmlFKStats.Text = tableIndexUpdated ?
-                            $"Genereret {missingKeys.Count:N0} nye rækker - tableIndex opdateret" :
-                            $"Genereret {missingKeys.Count:N0} nye rækker";
+                // Success message
+                string successMessage = $"Genereret repareret XML med {missingKeys.Count:N0} nye rækker\n\n";
 
-                        // Vis success message EN GANG
-                        string successMessage = $"Genereret repareret XML med {missingKeys.Count:N0} nye rækker\n\n" +
-                                              $"Output: {outputXmlPath}";
+                if (useStructuredOutput)
+                {
+                    successMessage += $"Output mappe: {outputDirectory}\n\n";
+                    successMessage += "Filer oprettet:\n";
+                    successMessage += $"  • {Path.GetFileName(outputXmlPath)}\n";
 
-                        if (tableIndexUpdated)
-                        {
-                            successMessage += "\n\ntableIndex.xml er blevet opdateret:\n" +
-                                            "- Tilføjet 'Integritsfejl' kolonne\n" +
-                                            $"- Opdateret antal rækker (+{missingKeys.Count:N0})";
-                        }
+                    if (tableIndexUpdated)
+                    {
+                        successMessage += "  • tableIndex_updated.xml\n\n";
+                        successMessage += "tableIndex ændringer:\n";
+                        successMessage += "  • Tilføjet 'Integritsfejl' kolonne\n";
+                        successMessage += $"  • Opdateret antal rækker (+{missingKeys.Count:N0})\n\n";
+                    }
+                    else
+                    {
+                        successMessage += "\n";
+                    }
 
-                        MessageBox.Show(successMessage, "Succes", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    successMessage += "Vil du åbne output mappen?";
+                }
+                else
+                {
+                    successMessage += $"Output: {outputXmlPath}";
+                }
+
+                var result = MessageBox.Show(
+                    successMessage,
+                    "Succes",
+                    useStructuredOutput ? MessageBoxButtons.YesNo : MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+
+                // Åbn output mappe hvis bruger siger ja
+                if (useStructuredOutput && result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start("explorer.exe", outputDirectory);
                     }
                     catch (Exception ex)
                     {
-                        progressBar1.Visible = false;
-                        lblXmlFKStats.Text = "Fejl under generering";
-                        MessageBox.Show($"Fejl ved generering af repareret XML: {ex.Message}", "Fejl", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    finally
-                    {
-                        btnGenerateFixedXml.Enabled = true;
+                        System.Diagnostics.Debug.WriteLine($"Kunne ikke åbne mappe: {ex.Message}");
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                progressBar1.Visible = false;
+                lblXmlFKStats.Text = "Fejl under generering";
+                MessageBox.Show($"Fejl ved generering af repareret XML: {ex.Message}", "Fejl",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnGenerateFixedXml.Enabled = true;
             }
         }
 
@@ -1111,9 +1199,11 @@ namespace TestvaerkstedetToolkit
 
         /// <summary>
         /// Opdater tableIndex.xml med ny "Integritsfejl" kolonne og opdateret row count
+        /// Gemmer til output path (ikke original)
         /// </summary>
         private void UpdateTableIndexAfterRepair(
-            string tableIndexPath,
+            string sourceTableIndexPath,
+            string outputTableIndexPath,
             string tableName,
             int addedRowCount,
             string integrityColumnName = "Integritsfejl")
@@ -1121,7 +1211,7 @@ namespace TestvaerkstedetToolkit
             try
             {
                 // Load tableIndex.xml
-                var doc = XDocument.Load(tableIndexPath);
+                var doc = XDocument.Load(sourceTableIndexPath);
                 var ns = doc.Root.GetDefaultNamespace();
 
                 // Find target table
@@ -1181,8 +1271,8 @@ namespace TestvaerkstedetToolkit
                     rowsElement.Value = newRowCount.ToString();
                 }
 
-                // Gem opdateret tableIndex.xml
-                doc.Save(tableIndexPath);
+                // Gem opdateret tableIndex.xml til OUTPUT path (IKKE original)
+                doc.Save(outputTableIndexPath);
             }
             catch (Exception ex)
             {
@@ -1501,6 +1591,77 @@ namespace TestvaerkstedetToolkit
                     lstXmlMissingValues.SetSelected(i, true);
                 e.Handled = true;
             }
+        }
+
+        #endregion
+
+        #region XML FK Repair - Helper methods
+
+        /// <summary>
+        /// Ekstrahér AVID version fra tableIndex path
+        /// Eksempel: C:\AVID.SA.18005.1\Indices\tableIndex.xml -> AVID.SA.18005.1
+        /// </summary>
+        private string ExtractAvidVersion(string tableIndexPath)
+        {
+            try
+            {
+                // Gå op i directory strukturen og find AVID mappen
+                DirectoryInfo dir = new DirectoryInfo(Path.GetDirectoryName(tableIndexPath));
+
+                while (dir != null)
+                {
+                    // Match AVID pattern: AVID.SA.xxxxx.x eller lignende
+                    if (System.Text.RegularExpressions.Regex.IsMatch(dir.Name, @"^AVID\.[A-Z]{2,}\.\d+\.\d+"))
+                    {
+                        return dir.Name;
+                    }
+                    dir = dir.Parent;
+                }
+
+                return "Unknown_AVID";
+            }
+            catch
+            {
+                return "Unknown_AVID";
+            }
+        }
+
+        /// <summary>
+        /// Opret struktureret output directory for FK repair på Desktop
+        /// </summary>
+        private string CreateRepairOutputDirectory(string avidVersion, string tableName)
+        {
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string parentFolder = Path.Combine(desktopPath, "XML_FK_Repairs");
+
+            // Opret parent folder hvis den ikke findes
+            Directory.CreateDirectory(parentFolder);
+
+            // Find næste version nummer
+            string searchPattern = $"repair_{avidVersion}_{tableName}_v*";
+            var existingFolders = Directory.GetDirectories(parentFolder, searchPattern);
+
+            int nextVersion = 1;
+            if (existingFolders.Length > 0)
+            {
+                int maxVersion = 0;
+                foreach (var folder in existingFolders)
+                {
+                    string folderName = Path.GetFileName(folder);
+                    var match = System.Text.RegularExpressions.Regex.Match(folderName, @"_v(\d+)$");
+                    if (match.Success && int.TryParse(match.Groups[1].Value, out int version))
+                    {
+                        maxVersion = Math.Max(maxVersion, version);
+                    }
+                }
+                nextVersion = maxVersion + 1;
+            }
+
+            string repairFolderName = $"repair_{avidVersion}_{tableName}_v{nextVersion}";
+            string outputDirectory = Path.Combine(parentFolder, repairFolderName);
+            Directory.CreateDirectory(outputDirectory);
+
+            return outputDirectory;
         }
 
         #endregion

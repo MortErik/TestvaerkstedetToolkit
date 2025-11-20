@@ -9,10 +9,6 @@ namespace TestvaerkstedetToolkit
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.Label lblParentTable;
-        private System.Windows.Forms.ComboBox cmbParentTable;
-        private System.Windows.Forms.Label lblChildTable;
-        private System.Windows.Forms.ComboBox cmbChildTable;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -76,6 +72,10 @@ namespace TestvaerkstedetToolkit
 
             // XML FK REPAIR GROUP
             this.grpXMLFKRepair = new System.Windows.Forms.GroupBox();
+            this.lblParentTable = new System.Windows.Forms.Label();
+            this.cmbParentTable = new System.Windows.Forms.ComboBox();
+            this.lblChildTable = new System.Windows.Forms.Label();
+            this.cmbChildTable = new System.Windows.Forms.ComboBox();
             this.lblTableIndex = new System.Windows.Forms.Label();
             this.txtTableIndex = new System.Windows.Forms.TextBox();
             this.btnBrowseTableIndex = new System.Windows.Forms.Button();
@@ -428,7 +428,6 @@ namespace TestvaerkstedetToolkit
             // ───────────────────────────────────────────────────────
 
             // TableIndex label
-            this.lblTableIndex = new System.Windows.Forms.Label();
             this.lblTableIndex.AutoSize = true;
             this.lblTableIndex.Location = new System.Drawing.Point(20, 25);
             this.lblTableIndex.Name = "lblTableIndex";
@@ -438,7 +437,6 @@ namespace TestvaerkstedetToolkit
             this.lblTableIndex.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
 
             // TableIndex textbox
-            this.txtTableIndex = new System.Windows.Forms.TextBox();
             this.txtTableIndex.Location = new System.Drawing.Point(130, 25);
             this.txtTableIndex.Name = "txtTableIndex";
             this.txtTableIndex.Size = new System.Drawing.Size(800, 20);
@@ -448,7 +446,6 @@ namespace TestvaerkstedetToolkit
             this.txtTableIndex.ForeColor = System.Drawing.Color.Blue;
 
             // TableIndex browse button
-            this.btnBrowseTableIndex = new System.Windows.Forms.Button();
             this.btnBrowseTableIndex.Location = new System.Drawing.Point(940, 23);
             this.btnBrowseTableIndex.Name = "btnBrowseTableIndex";
             this.btnBrowseTableIndex.Size = new System.Drawing.Size(75, 23);
@@ -476,7 +473,6 @@ namespace TestvaerkstedetToolkit
             // ───────────────────────────────────────────────────────
 
             // Parent Table dropdown label
-            this.lblParentTable = new System.Windows.Forms.Label();
             this.lblParentTable.AutoSize = true;
             this.lblParentTable.Location = new System.Drawing.Point(20, 120);
             this.lblParentTable.Name = "lblParentTable";
@@ -486,7 +482,6 @@ namespace TestvaerkstedetToolkit
             this.lblParentTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
 
             // Parent Table dropdown
-            this.cmbParentTable = new System.Windows.Forms.ComboBox();
             this.cmbParentTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbParentTable.Location = new System.Drawing.Point(130, 120);
             this.cmbParentTable.Name = "cmbParentTable";
@@ -495,7 +490,6 @@ namespace TestvaerkstedetToolkit
             this.cmbParentTable.Enabled = false;
 
             // Parent XML Path label
-            this.lblParentXml = new System.Windows.Forms.Label();
             this.lblParentXml.AutoSize = true;
             this.lblParentXml.Location = new System.Drawing.Point(20, 150);
             this.lblParentXml.Name = "lblParentXml";
@@ -504,7 +498,6 @@ namespace TestvaerkstedetToolkit
             this.lblParentXml.Text = "Parent XML Path:";
 
             // Parent XML textbox (auto-filled from dropdown)
-            this.txtParentXml = new System.Windows.Forms.TextBox();
             this.txtParentXml.Location = new System.Drawing.Point(130, 150);
             this.txtParentXml.Name = "txtParentXml";
             this.txtParentXml.Size = new System.Drawing.Size(800, 20);
@@ -513,7 +506,6 @@ namespace TestvaerkstedetToolkit
             this.txtParentXml.BackColor = System.Drawing.SystemColors.Control;
 
             // Parent browse button (override)
-            this.btnBrowseParentXml = new System.Windows.Forms.Button();
             this.btnBrowseParentXml.Location = new System.Drawing.Point(940, 148);
             this.btnBrowseParentXml.Name = "btnBrowseParentXml";
             this.btnBrowseParentXml.Size = new System.Drawing.Size(75, 23);
@@ -526,7 +518,6 @@ namespace TestvaerkstedetToolkit
             // ───────────────────────────────────────────────────────
 
             // Child Table dropdown label
-            this.lblChildTable = new System.Windows.Forms.Label();
             this.lblChildTable.AutoSize = true;
             this.lblChildTable.Location = new System.Drawing.Point(20, 185);
             this.lblChildTable.Name = "lblChildTable";
@@ -536,7 +527,6 @@ namespace TestvaerkstedetToolkit
             this.lblChildTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
 
             // Child Table dropdown
-            this.cmbChildTable = new System.Windows.Forms.ComboBox();
             this.cmbChildTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbChildTable.Location = new System.Drawing.Point(130, 185);
             this.cmbChildTable.Name = "cmbChildTable";
@@ -545,7 +535,6 @@ namespace TestvaerkstedetToolkit
             this.cmbChildTable.Enabled = false;
 
             // Child XML Path label
-            this.lblChildXml = new System.Windows.Forms.Label();
             this.lblChildXml.AutoSize = true;
             this.lblChildXml.Location = new System.Drawing.Point(20, 215);
             this.lblChildXml.Name = "lblChildXml";
@@ -554,7 +543,6 @@ namespace TestvaerkstedetToolkit
             this.lblChildXml.Text = "Child XML Path:";
 
             // Child XML textbox (auto-filled from dropdown)
-            this.txtChildXml = new System.Windows.Forms.TextBox();
             this.txtChildXml.Location = new System.Drawing.Point(130, 215);
             this.txtChildXml.Name = "txtChildXml";
             this.txtChildXml.Size = new System.Drawing.Size(800, 20);
@@ -563,7 +551,6 @@ namespace TestvaerkstedetToolkit
             this.txtChildXml.BackColor = System.Drawing.SystemColors.Control;
 
             // Child browse button (override)
-            this.btnBrowseChildXml = new System.Windows.Forms.Button();
             this.btnBrowseChildXml.Location = new System.Drawing.Point(940, 213);
             this.btnBrowseChildXml.Name = "btnBrowseChildXml";
             this.btnBrowseChildXml.Size = new System.Drawing.Size(75, 23);
@@ -582,7 +569,6 @@ namespace TestvaerkstedetToolkit
             // ───────────────────────────────────────────────────────
 
             // Mapping label
-            this.lblXmlMapping = new System.Windows.Forms.Label();
             this.lblXmlMapping.AutoSize = true;
             this.lblXmlMapping.Location = new System.Drawing.Point(20, 265);
             this.lblXmlMapping.Name = "lblXmlMapping";
@@ -598,7 +584,6 @@ namespace TestvaerkstedetToolkit
             lblParentXmlCol.Text = "Parent Column:";
 
             // Parent column combobox
-            this.cmbParentXmlColumns = new System.Windows.Forms.ComboBox();
             this.cmbParentXmlColumns.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbParentXmlColumns.Location = new System.Drawing.Point(160, 285);
             this.cmbParentXmlColumns.Name = "cmbParentXmlColumns";
@@ -612,7 +597,6 @@ namespace TestvaerkstedetToolkit
             lblChildXmlCol.Text = "Child Column:";
 
             // Child column combobox
-            this.cmbChildXmlColumns = new System.Windows.Forms.ComboBox();
             this.cmbChildXmlColumns.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbChildXmlColumns.Location = new System.Drawing.Point(160, 315);
             this.cmbChildXmlColumns.Name = "cmbChildXmlColumns";
@@ -624,21 +608,18 @@ namespace TestvaerkstedetToolkit
             // ───────────────────────────────────────────────────────
 
             // sammensatte PK label
-            this.lblXmlCompositeKey = new System.Windows.Forms.Label();
             this.lblXmlCompositeKey.AutoSize = true;
             this.lblXmlCompositeKey.Location = new System.Drawing.Point(20, 350);
             this.lblXmlCompositeKey.Text = "Sammensatte PK (Optional):";
             this.lblXmlCompositeKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
 
             // Add/Remove buttons
-            this.btnAddXmlPrimaryKey = new System.Windows.Forms.Button();
             this.btnAddXmlPrimaryKey.Location = new System.Drawing.Point(200, 348);
             this.btnAddXmlPrimaryKey.Size = new System.Drawing.Size(100, 23);
             this.btnAddXmlPrimaryKey.Text = "Add Column";
             this.btnAddXmlPrimaryKey.TabIndex = 9;
             this.btnAddXmlPrimaryKey.UseVisualStyleBackColor = true;
 
-            this.btnRemoveXmlPrimaryKey = new System.Windows.Forms.Button();
             this.btnRemoveXmlPrimaryKey.Location = new System.Drawing.Point(310, 348);
             this.btnRemoveXmlPrimaryKey.Size = new System.Drawing.Size(100, 23);
             this.btnRemoveXmlPrimaryKey.Text = "Remove Last";
@@ -647,7 +628,6 @@ namespace TestvaerkstedetToolkit
             this.btnRemoveXmlPrimaryKey.Enabled = false;
 
             // Dynamic columns panel
-            this.pnlXmlDynamicColumns = new System.Windows.Forms.Panel();
             this.pnlXmlDynamicColumns.Location = new System.Drawing.Point(40, 380);
             this.pnlXmlDynamicColumns.Size = new System.Drawing.Size(970, 120);
             this.pnlXmlDynamicColumns.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -655,7 +635,6 @@ namespace TestvaerkstedetToolkit
             this.pnlXmlDynamicColumns.TabIndex = 11;
 
             // Analyze button
-            this.btnAnalyzeXmlFK = new System.Windows.Forms.Button();
             this.btnAnalyzeXmlFK.Location = new System.Drawing.Point(40, 515);
             this.btnAnalyzeXmlFK.Size = new System.Drawing.Size(150, 30);
             this.btnAnalyzeXmlFK.Text = "Analyze FK";
@@ -664,7 +643,6 @@ namespace TestvaerkstedetToolkit
             this.btnAnalyzeXmlFK.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
 
             // Stats label
-            this.lblXmlFKStats = new System.Windows.Forms.Label();
             this.lblXmlFKStats.AutoSize = true;
             this.lblXmlFKStats.Location = new System.Drawing.Point(200, 523);
             this.lblXmlFKStats.Text = "Klik 'Analyze FK' for at starte";
@@ -677,13 +655,11 @@ namespace TestvaerkstedetToolkit
             // ───────────────────────────────────────────────────────
 
             // Results listbox
-            this.lstXmlMissingValues = new System.Windows.Forms.ListBox();
             this.lstXmlMissingValues.Location = new System.Drawing.Point(40, 560);
             this.lstXmlMissingValues.Size = new System.Drawing.Size(500, 120);
             this.lstXmlMissingValues.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lstXmlMissingValues.TabIndex = 13;
 
-            this.btnExportXmlMissing = new System.Windows.Forms.Button();
             this.btnExportXmlMissing.Location = new System.Drawing.Point(560, 560);
             this.btnExportXmlMissing.Size = new System.Drawing.Size(120, 25);
             this.btnExportXmlMissing.Text = "Export til fil";
@@ -691,7 +667,6 @@ namespace TestvaerkstedetToolkit
             this.btnExportXmlMissing.Enabled = false;
             this.btnExportXmlMissing.UseVisualStyleBackColor = true;
 
-            this.btnCopyXmlSelected = new System.Windows.Forms.Button();
             this.btnCopyXmlSelected.Location = new System.Drawing.Point(560, 590);
             this.btnCopyXmlSelected.Size = new System.Drawing.Size(120, 25);
             this.btnCopyXmlSelected.Text = "Kopiér markerede";
@@ -700,13 +675,11 @@ namespace TestvaerkstedetToolkit
             this.btnCopyXmlSelected.UseVisualStyleBackColor = true;
 
             // Integrity description
-            this.lblIntegrityDesc = new System.Windows.Forms.Label();
             this.lblIntegrityDesc.AutoSize = true;
             this.lblIntegrityDesc.Location = new System.Drawing.Point(560, 625);
             this.lblIntegrityDesc.Text = "Integrity beskrivelse:";
             this.lblIntegrityDesc.TabIndex = 0;
 
-            this.txtIntegrityDesc = new System.Windows.Forms.TextBox();
             this.txtIntegrityDesc.Location = new System.Drawing.Point(560, 642);
             this.txtIntegrityDesc.Size = new System.Drawing.Size(600, 20);
             this.txtIntegrityDesc.Multiline = false;
@@ -714,7 +687,6 @@ namespace TestvaerkstedetToolkit
             this.txtIntegrityDesc.Text = "Betydning ukendt. Rækken er tilføjet under aflevering til arkiv, for at sikre referentiel integritet i databasen af hensyn til langtidsbevaring";
 
             // Generate button
-            this.btnGenerateFixedXml = new System.Windows.Forms.Button();
             this.btnGenerateFixedXml.Location = new System.Drawing.Point(560, 667);
             this.btnGenerateFixedXml.Size = new System.Drawing.Size(220, 35);
             this.btnGenerateFixedXml.Text = "Generer Nye Rækker til Parent";
@@ -1011,6 +983,10 @@ namespace TestvaerkstedetToolkit
 
         // XML FK REPAIR
         private System.Windows.Forms.GroupBox grpXMLFKRepair;
+        private System.Windows.Forms.Label lblParentTable;
+        private System.Windows.Forms.ComboBox cmbParentTable;
+        private System.Windows.Forms.Label lblChildTable;
+        private System.Windows.Forms.ComboBox cmbChildTable;
         private System.Windows.Forms.Label lblTableIndex;
         private System.Windows.Forms.TextBox txtTableIndex;
         private System.Windows.Forms.Button btnBrowseTableIndex;

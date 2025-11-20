@@ -135,7 +135,7 @@ namespace TestvaerkstedetToolkit
             availableTables = TableIndexParser.ParseTableIndex(currentTableIndexPath);
 
             // Populer table selector dropdown
-            foreach (var table in availableTables)
+            foreach (var table in availableTables.OrderByDescending(tie => tie.Columns.Count))
             {
                 cmbTableSelector.Items.Add(table.DisplayText);
             }

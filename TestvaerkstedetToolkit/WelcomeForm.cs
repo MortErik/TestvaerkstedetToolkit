@@ -137,7 +137,22 @@ namespace TestvaerkstedetToolkit
 
         private void btnXMLFKRepair_Click(object sender, EventArgs e)
         {
-            OpenToolInSingleMode(Form1.ToolMode.XMLFKRepair);
+            // XML FK Repair har sin egen dedikerede form
+            try
+            {
+                var xmlFKRepairForm = new XMLFKRepairForm();
+
+                // Brug docking version i stedet for absolut positionering
+                AddBackButtonWithDocking(xmlFKRepairForm);
+
+                xmlFKRepairForm.Show();
+                this.Hide();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fejl ved åbning af XML FK Repair:\n{ex.Message}",
+                               "Fejl", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnXMLConversion_Click(object sender, EventArgs e)

@@ -88,6 +88,12 @@
     <Compile Include="XMLConversionForm.Designer.cs">
       <DependentUpon>XMLConversionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="XMLFKRepairForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="XMLFKRepairForm.Designer.cs">
+      <DependentUpon>XMLFKRepairForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="XMLTableSplitterForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +109,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="XMLConversionForm.resx">
+      <DependentUpon>XMLConversionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XMLFKRepairForm.resx">
+      <DependentUpon>XMLFKRepairForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

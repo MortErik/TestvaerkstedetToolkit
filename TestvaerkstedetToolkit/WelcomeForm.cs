@@ -117,7 +117,22 @@ namespace TestvaerkstedetToolkit
         // Navigation Event Handlers
         private void btnCSVFKRepair_Click(object sender, EventArgs e)
         {
-            OpenToolInSingleMode(Form1.ToolMode.CSVFKRepair);
+            // CSV FK Repair har sin egen dedikerede form
+            try
+            {
+                var csvFKRepairForm = new CSVFKRepairForm();
+
+                // Brug docking version i stedet for absolut positionering
+                AddBackButtonWithDocking(csvFKRepairForm);
+
+                csvFKRepairForm.Show();
+                this.Hide();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fejl ved åbning af CSV FK Repair:\n{ex.Message}",
+                               "Fejl", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnXMLFKRepair_Click(object sender, EventArgs e)

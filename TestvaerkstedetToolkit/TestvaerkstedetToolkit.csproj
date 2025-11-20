@@ -49,6 +49,12 @@
     <Compile Include="Controls\CompositePKSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="CSVFKRepairForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CSVFKRepairForm.Designer.cs">
+      <DependentUpon>CSVFKRepairForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

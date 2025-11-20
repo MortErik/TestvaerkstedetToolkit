@@ -127,7 +127,22 @@ namespace TestvaerkstedetToolkit
 
         private void btnXMLConversion_Click(object sender, EventArgs e)
         {
-            OpenToolInSingleMode(Form1.ToolMode.XMLConversion);
+            // XML Conversion har sin egen dedikerede form
+            try
+            {
+                var conversionForm = new XMLConversionForm();
+
+                // Brug docking version i stedet for absolut positionering
+                AddBackButtonWithDocking(conversionForm);
+
+                conversionForm.Show();
+                this.Hide();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fejl ved åbning af XML Conversion:\n{ex.Message}",
+                               "Fejl", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnXMLTableSplitter_Click(object sender, EventArgs e)

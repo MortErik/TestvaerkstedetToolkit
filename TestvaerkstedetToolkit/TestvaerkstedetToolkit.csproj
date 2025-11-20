@@ -76,6 +76,12 @@
     <Compile Include="WelcomeForm.Designer.cs">
       <DependentUpon>WelcomeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="XMLConversionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="XMLConversionForm.Designer.cs">
+      <DependentUpon>XMLConversionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="XMLTableSplitterForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -134,8 +134,11 @@ namespace TestvaerkstedetToolkit
             // Parse tableIndex.xml
             availableTables = TableIndexParser.ParseTableIndex(currentTableIndexPath);
 
-            // Populer table selector dropdown
-            foreach (var table in availableTables.OrderByDescending(tie => tie.Columns.Count))
+            // SORTÉR availableTables listen direkte (ikke kun visningen)
+            availableTables = availableTables.OrderByDescending(tie => tie.Columns.Count).ToList();
+
+            // Populer table selector dropdown (nu er de allerede sorteret)
+            foreach (var table in availableTables)
             {
                 cmbTableSelector.Items.Add(table.DisplayText);
             }

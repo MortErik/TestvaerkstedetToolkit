@@ -1076,9 +1076,15 @@ namespace TestvaerkstedetToolkit
                 // STEP 1: Opret temp directory
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 string parentFolder = Path.Combine(desktopPath, "XML_Table_Splits");
-                string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+
+                // Parse original table nummer
+                int originalTableNumber = int.Parse(Regex.Match(uiData.OriginalTableEntry.Folder, @"table(\d+)").Groups[1].Value);
+
                 string versionNumber = GetNextVersionNumber(parentFolder, uiData.OriginalTableName);
-                string splitFolderName = $"split_{uiData.OriginalTableName}_{versionNumber}_{timestamp}";
+                string splitFolderName = $"split_{uiData.OriginalTableName}_table{originalTableNumber}_{versionNumber}";
+
+                // Timestamp til logging
+                string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
                 // TEMP folder for generation
                 tempDirectory = Path.Combine(Path.GetTempPath(), $"xml_split_temp_{Guid.NewGuid():N}");
@@ -1096,8 +1102,7 @@ namespace TestvaerkstedetToolkit
 
                 progress?.Report((10, "Genererer split tabeller i temp..."));
 
-                // Parse original table nummer
-                int originalTableNumber = int.Parse(Regex.Match(uiData.OriginalTableEntry.Folder, @"table(\d+)").Groups[1].Value);
+                // Parse next table nummer (originalTableNumber er allerede deklareret ovenfor)
                 int nextTableNumber = GetNextAvailableTableNumber(uiData.TableIndexPath);
 
                 // STEP 2: Generer ALLE filer i temp directory
@@ -1640,19 +1645,14 @@ namespace TestvaerkstedetToolkit
         /// </summary>
         private void GenerateTableFiles(SplitTable table, string outputDirectory, UIDataContainer uiData, int tableNumber)
         {
-            // Beskrivende mappenavn
-            string descriptiveFolder = $"{uiData.OriginalTableEntry.Folder}_{table.TableName}";
-            string descriptivePath = Path.Combine(outputDirectory, descriptiveFolder);
-            Directory.CreateDirectory(descriptivePath);
-
-            // Korrekt arkitektur mappe
-            string correctFolder = $"table{tableNumber}";
-            string correctPath = Path.Combine(descriptivePath, correctFolder);
-            Directory.CreateDirectory(correctPath);
+            // Direkte table folder uden beskrivende wrapper
+            string tableFolder = $"table{tableNumber}";
+            string tablePath = Path.Combine(outputDirectory, tableFolder);
+            Directory.CreateDirectory(tablePath);
 
             // XML fil med korrekt navn og namespace
             string xmlFileName = $"table{tableNumber}.xml";
-            string xmlPath = Path.Combine(correctPath, xmlFileName);
+            string xmlPath = Path.Combine(tablePath, xmlFileName);
 
             // Generer namespace med korrekt tabelnummer
             string newNamespace = $"http://www.sa.dk/xmlns/siard/1.0/schema0/table{tableNumber}.xsd";

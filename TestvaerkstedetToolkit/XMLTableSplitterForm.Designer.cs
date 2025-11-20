@@ -185,7 +185,7 @@
             this.groupBoxPrimaryKey.Size = new System.Drawing.Size(1130, 380);
             this.groupBoxPrimaryKey.TabIndex = 2;
             this.groupBoxPrimaryKey.TabStop = false;
-            this.groupBoxPrimaryKey.Text = "3. Primærnøgle Konfiguration (Composite Support)";
+            this.groupBoxPrimaryKey.Text = "3. Primærnøgle konfiguration";
 
             // 
             // compositePKSelector

@@ -1611,7 +1611,7 @@ namespace TestvaerkstedetToolkit
                 while (dir != null)
                 {
                     // Match AVID pattern: AVID.SA.xxxxx.x eller lignende
-                    if (System.Text.RegularExpressions.Regex.IsMatch(dir.Name, @"^AVID\.[A-Z]{2,}\.\d+\.\d+"))
+                    if (System.Text.RegularExpressions.Regex.IsMatch(dir.Name, @"^AVID\.[A-ZÆØÅa-zæøå]{2,}\.\d+\.\d+"))
                     {
                         return dir.Name;
                     }
